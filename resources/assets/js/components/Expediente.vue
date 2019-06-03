@@ -206,8 +206,34 @@
 
 <script>
     export default {
+        data() {
+            return{
+                codigo_expediente :'',
+             tipo_documento : '' ,
+              cabecera_documento: '',
+                 asunto_tramite: '',
+                  nro_folio: '',
+                   prioridad: '',
+                    fecha: '',
+                     observaciones: '',
+                     arrayExpediente : []
+
+            }
+        },
+        methods: {
+            listarExpediente (){
+                let me = this;
+                axios.get('/expediente').then(function (response) { //obtener los valores del /ofcina
+                    me.arrayExpediente = response.data
+                })
+                .catch(function(error){ // si tenemos un error lo tapamos con un catch
+                console.log(error);
+                    });
+                }
+            
+        },
         mounted() {
-            console.log('Component mounted.')
+            this.listarExpediente();
         }
     }
 </script>

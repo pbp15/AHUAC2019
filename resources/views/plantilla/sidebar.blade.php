@@ -8,36 +8,34 @@
                         Mantenimiento
                     </li>
                     <li class="nav-item nav-dropdown">
-                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-bag"></i> Almacén</a>
+                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-bag"></i> Oficinas</a>
                         <ul class="nav-dropdown-items">
                             <li @click="menu=1" class="nav-item">
-                                <a class="nav-link" href="#"><i class="icon-bag"></i> Categorías</a>
+                                <a class="nav-link" href="#"><i class="icon-bag"></i> Oficinas</a>
                             </li>
                             <li @click="menu=2" class="nav-item">
-                                <a class="nav-link" href="#"><i class="icon-bag"></i> Artículos</a>
+                                <a class="nav-link" href="#"><i class="icon-bag"></i> Alcaldia </a>
                             </li>
                         </ul>
                     </li>
                     <li class="nav-item nav-dropdown">
-                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-wallet"></i> Compras</a>
+                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-wallet"></i> Expedientes</a>
                         <ul class="nav-dropdown-items">
                             <li @click="menu=3" class="nav-item">
-                                <a class="nav-link" href="#"><i class="icon-wallet"></i> Ingresos</a>
+                                <a class="nav-link" href="#"><i class="icon-wallet"></i> Expedientes</a>
                             </li>
                             <li @click="menu=4" class="nav-item">
-                                <a class="nav-link" href="#"><i class="icon-notebook"></i> Proveedores</a>
+                                <a class="nav-link" href="#"><i class="icon-notebook"></i> Solicitante</a>
                             </li>
                         </ul>
                     </li>
                     <li class="nav-item nav-dropdown">
-                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-basket"></i> Ventas</a>
+                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-basket"></i> Registro Expedientes</a>
                         <ul class="nav-dropdown-items">
                             <li @click="menu=5" class="nav-item">
-                                <a class="nav-link" href="#"><i class="icon-basket-loaded"></i> Ventas</a>
+                                <a class="nav-link" href="#"><i class="icon-basket-loaded"></i> Registro </a>
                             </li>
-                            <li @click="menu=6" class="nav-item">
-                                <a class="nav-link" href="#"><i class="icon-notebook"></i> Clientes</a>
-                            </li>
+                         
                         </ul>
                     </li>
                     <li class="nav-item nav-dropdown">
@@ -55,10 +53,10 @@
                         <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-pie-chart"></i> Reportes</a>
                         <ul class="nav-dropdown-items">
                             <li @click="menu=9" class="nav-item">
-                                <a class="nav-link" href="#"><i class="icon-chart"></i> Reporte Ingresos</a>
+                                <a class="nav-link" href="#"><i class="icon-chart"></i> Reporte Expedientes</a>
                             </li>
                             <li @click="menu=10" class="nav-item">
-                                <a class="nav-link" href="#"><i class="icon-chart"></i> Reporte Ventas</a>
+                                <a class="nav-link" href="#"><i class="icon-chart"></i> Reporte Expedientes</a>
                             </li>
                         </ul>
                     </li>
