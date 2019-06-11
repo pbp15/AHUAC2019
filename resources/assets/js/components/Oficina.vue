@@ -19,12 +19,12 @@
                         <div class="form-group row">
                             <div class="col-md-6">
                                 <div class="input-group">
-                                    <select class="form-control col-md-3" id="opcion" name="opcion">
-                                      <option value="nombre">Nombre</option>
-                                      <option value="descripcion">Descripción</option>
+                                    <select class="form-control col-md-3" v-model="criterioO">
+                                      <option value="unidad_organica">Unidad Organica</option>
+                                      <option value="responsable">Responsable</option>
                                     </select>
-                                    <input type="text" id="texto" name="texto" class="form-control" placeholder="Texto a buscar">
-                                    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                                    <input type="text" v-model="buscarO" @keyup.enter="listarOficina(1,buscarO,criterioO)" class="form-control" placeholder="Texto a buscar">
+                                    <button type="submit" @click="listarOficina(1,buscarO,criterioO)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                 </div>
                             </div>
                         </div>
@@ -57,23 +57,14 @@
                         </table>
                         <nav>
                             <ul class="pagination">
-                                <li class="page-item">
-                                    <a class="page-link" href="#">Ant</a>
+                                 <li class="page-item" v-if="pagination.current_page > 1">
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1,buscarO,criterioO)">Ant</a>
                                 </li>
-                                <li class="page-item active">
-                                    <a class="page-link" href="#">1</a>
+                                <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActived ? 'active' : '']">
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(page,buscarO,criterioO)" v-text="page"></a>
                                 </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">2</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">3</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">4</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">Sig</a>
+                                <li class="page-item" v-if="pagination.current_page < pagination.last_page">
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1,buscarO,criterioO)">Sig</a>
                                 </li>
                             </ul>
                         </nav>
@@ -138,8 +129,8 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button"  class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
-                            <button type="button"  v-if ="tipoAccion==1"class="btn btn-primary" @click="registrarOficina()">Guardar</button>
-                            <button type="button"  v-if ="tipoAccion==2"class="btn btn-primary">Actualizar</button>
+                            <button type="button"  v-if ="tipoAccion==1" class="btn btn-primary" @click="registrarOficina()">Guardar</button>
+                            <button type="button"  v-if ="tipoAccion==2" class="btn btn-primary" @click="actualizarOficina()">Actualizar</button>
                         </div>
                     </div>
                     <!-- /.modal-content -->
@@ -178,6 +169,7 @@
     export default {
         data() {
             return{
+                oficina_id: 0,
                 unidad_organica :'',
                 division : '' ,
                 responsable: '',
@@ -186,20 +178,76 @@
               tituloModal: '', //para determinar como se llamara el titulo q mostrara
               tipoAccion : 0,
               errorOficina : 0 ,
-              errorMostrarMsjOficina : []
+              errorMostrarMsjOficina : [],
+              pagination : {
 
-   }
+                  'total' : 0,   //total de registros
+                  'current_page' :  0, //pagina actual
+                  'per_page' : 0,  //numero de registros por pagina
+                  'last_page' : 0,  //la ultima pagina
+                  'from' : 0, // desde la pagina
+                  'to' : 0, //hasta la pagina
+              },
+              offset : 3,
+              criterioO : 'unidad_organica',
+              buscarO:''
+
+           }
         },
+
+         computed:{
+            isActived: function(){
+                return this.pagination.current_page;
+            },
+            //Calcula el numero de los elementos de la paginación
+            pagesNumber: function() {
+                //si la pagina es diferente de to(ultimo elemento de la pagina) 
+                //voy a returnar una array vacio
+                if(!this.pagination.to) {
+                    return [];
+                }
+                
+                var from = this.pagination.current_page - this.offset; 
+                if(from < 1) {
+                    from = 1;
+                }
+
+                var to = from + (this.offset * 2); 
+                if(to >= this.pagination.last_page){
+                    to = this.pagination.last_page;
+                }  
+
+                var pagesArray = [];
+                while(from <= to) {
+                    pagesArray.push(from);
+                    from++;
+                }
+                return pagesArray;             
+
+            }
+        
+         },
         methods: {
-            listarOficina (){
+            listarOficina (page,buscarO,criterioO){
                 let me=this;
-                axios.get('/oficina').then(function (response) { //obtener los valores del /ofcina
-                     me.arrayOficina =  response.data;  // esto es para almacenar todo el contenido en el array
+                var url ='/oficina?page=' + page + '&buscar=' + buscarO + '&criterio=' + criterioO;
+                axios.get(url).then(function (response) { //obtener los valores del /ofcina
+                     var respuesta = response.data;
+                     me.arrayOficina =  respuesta.oficinas.data;  // esto es para almacenar todo el contenido en el array
+                     me.pagination= respuesta.pagination;
                 })
                 .catch(function(error){ // si tenemos un error lo tapamos con un catch
                 console.log(error);
                     });
                 },
+
+            cambiarPagina(page,buscarO,criterioO){
+                let me = this;
+                //actualiza la pagina actual
+                me.pagination.current_page= page;
+                me.listarOficina(page,buscarO,criterioO);
+ 
+            },
          registrarOficina(){
 
              if (this.validarOficina()){
@@ -214,11 +262,34 @@
 
                 }).then(function (response) { //obtener los valores del /ofcina
                      me.cerrarModal();  // esto es para almacenar todo el contenido en el array
-                     me.listarOficina();
+                     me.listarOficina(1,'','unidad_organica');
                 })
                 .catch(function(error){ // si tenemos un error lo tapamos con un catch
                 console.log(error);
                     });
+
+         },
+         actualizarOficina(){
+
+             if (this.validarOficina()){
+                 return;
+             }
+
+             let me=this;
+                axios.put('/oficina/actualizar',{
+                    'unidad_organica' : this.unidad_organica,
+                    'division' : this.division,
+                    'responsable' : this.responsable,
+                    'id': this.oficina_id
+
+                }).then(function (response) { //obtener los valores del /ofcina
+                     me.cerrarModal();  // esto es para almacenar todo el contenido en el array
+                     me.listarOficina(1,'','unidad_organica');
+                })
+                .catch(function(error){ // si tenemos un error lo tapamos con un catch
+                console.log(error);
+                    });
+
 
          },
 
@@ -258,6 +329,22 @@
                          }
                          case 'actualizar':
                          {
+
+                            //  console.log(data);
+                            //con data jalamos los datos de registrar
+
+                            this.modal=1;
+                            this.tituloModal='Actualizar Oficina';
+                            this.tipoAccion=2;
+                            this.oficina_id=data['id'];
+                              this.unidad_organica= data['unidad_organica'];
+                             this.division = data['division'];
+                             this.responsable = data['responsable'];
+                      
+                            break;
+
+
+
                               
 
                               
@@ -274,7 +361,7 @@
             
         },
         mounted() {
-            this.listarOficina();
+            this.listarOficina(1,this.buscarO,this.criterioO);
         }
     }
 </script>

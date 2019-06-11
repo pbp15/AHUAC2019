@@ -19,15 +19,20 @@
                         <div class="form-group row">
                             <div class="col-md-6">
                                 <div class="input-group">
-                                    <select class="form-control col-md-3" id="opcion" name="opcion">
+                                    <select class="form-control col-md-3" v-model="criterioP">
+                                      <option value="num_documento">Nº Doc</option>
                                       <option value="nombre">Nombre</option>
-                                      <option value="descripcion">Descripción</option>
                                     </select>
-                                    <input type="text" id="texto" name="texto" class="form-control" placeholder="Texto a buscar">
-                                    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                                    <input type="text" v-model="buscarP" @keyup.enter="listarPersona(1,buscarP,criterioP)" class="form-control" placeholder="Texto a buscar">
+                                    <button type="submit" @click=" listarPersona(1,buscarP,criterioP)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                 </div>
                             </div>
                         </div>
+
+
+
+    
+
                         <table class="table table-bordered table-striped table-sm">
                             <thead>
                                 <tr>
@@ -70,23 +75,14 @@
                         </table>
                         <nav>
                             <ul class="pagination">
-                                <li class="page-item">
-                                    <a class="page-link" href="#">Ant</a>
+                                <li class="page-item" v-if="pagination.current_page > 1">
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1,buscarP,criterioP)">Ant</a>
                                 </li>
-                                <li class="page-item active">
-                                    <a class="page-link" href="#">1</a>
+                                <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActived ? 'active' : '']">
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(page,buscarP,criterioP)" v-text="page"></a>
                                 </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">2</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">3</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">4</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">Sig</a>
+                                <li class="page-item" v-if="pagination.current_page < pagination.last_page">
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1,buscarP,criterioP)">Sig</a>
                                 </li>
                             </ul>
                         </nav>
@@ -187,13 +183,24 @@
                                         </select>                                    
                                     </div>
                                 </div>
+
+
+                                
+                              <div v-show="errorPersona" class="form-group row div-error">
+                                    <div class="text-center text-error">
+                                        <div v-for="error in errorMostrarMsjPersona" :key="error" v-text="error">
+
+                                        </div>
+
+                                        </div>
+                                </div>
                                 
                             </form>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
                             <button type="button"  v-if ="tipoAccion==1" class="btn btn-primary" @click="registrarPersona()">Guardar</button>
-                            <button type="button"  v-if ="tipoAccion==2" class="btn btn-primary">Actualizar</button>
+                            <button type="button"  v-if ="tipoAccion==2" class="btn btn-primary" @click="actualizarPersona()">Actualizar</button>
                         </div>
                     </div>
                     <!-- /.modal-content -->
@@ -231,6 +238,7 @@
     export default {
         data() {
             return{
+                persona_id : 0,
                 nombre :'',
              tipo_documento : '' ,
               num_documento: '',
@@ -244,23 +252,84 @@
                      tituloModal : '',
                        tipoAccion : 0 ,
                        errorPersona : 0 ,
-                       errorMostrarMsjPersona : []
+                       errorMostrarMsjPersona : [],
+                       pagination : {
 
+                  'total' : 0,   //total de registros
+                  'current_page' :  0, //pagina actual
+                  'per_page' : 0,  //numero de registros por pagina
+                  'last_page' : 0,  //la ultima pagina
+                  'from' : 0, // desde la pagina
+                  'to' : 0, //hasta la pagina
+              },
+              offset : 3,
+               criterioP : 'num_documento',
+              buscarP:''
+
+           }
+        },
+
+         computed:{
+            isActived: function(){
+                return this.pagination.current_page;
+            },
+            //Calcula el numero de los elementos de la paginación
+            pagesNumber: function() {
+                //si la pagina es diferente de to(ultimo elemento de la pagina) 
+                //voy a returnar una array vacio
+                if(!this.pagination.to) {
+                    return [];
+                }
+                
+                var from = this.pagination.current_page - this.offset; 
+                if(from < 1) {
+                    from = 1;
+                }
+
+                var to = from + (this.offset * 2); 
+                if(to >= this.pagination.last_page){
+                    to = this.pagination.last_page;
+                }  
+
+                var pagesArray = [];
+                while(from <= to) {
+                    pagesArray.push(from);
+                    from++;
+                }
+                return pagesArray;             
 
             }
-        },
+        
+         },
+
+
         methods: {
-            listarPersona (){
+            listarPersona (page,buscarP,criterioP){
                 let me = this;
-                axios.get('/persona').then(function (response) { //obtener los valores del /ofcina
-                    me.arrayPersona = response.data;
-                })
+                var url ='/persona?page=' + page + '&buscar=' + buscarP + '&criterio=' + criterioP;
+                axios.get(url).then(function (response) { //obtener los valores del /ofcina
+                   var respuesta = response.data; 
+                    me.arrayPersona = respuesta.personas.data;
+                  me.pagination= respuesta.pagination;
+               })
                 .catch(function(error){ // si tenemos un error lo tapamos con un catch
                 console.log(error);
                     });
                 },
 
+            cambiarPagina(page,buscarP,criterioP){ //ESTE METODO RECIBE EL PARAMETRO PAGE
+                let me = this;
+                //actualiza la pagina actual
+                me.pagination.current_page =page;
+                me.listarPersona(page,buscarP,criterioP);
+            },
+
             registrarPersona(){
+                if (this.validarPersona()){
+                                return;
+                            }
+
+
                  let me = this;
                 axios.post('/persona/registrar',{
                     'nombre' : this.nombre ,
@@ -274,17 +343,61 @@
 
                 }).then(function (response) { //obtener los valores del /ofcina
                     me.cerrarModal();
-                    me.listarPersona();
+                    me.listarPersona(1,'','num_documento');
                 })
                 .catch(function(error){ // si tenemos un error lo tapamos con un catch
                 console.log(error);
                     });
 
             },
+            actualizarPersona(){
+
+                if (this.validarPersona()){
+                                return;
+                            }
+
+
+                 let me = this;
+                axios.put('/persona/actualizar',{
+                    'nombre' : this.nombre ,
+                    'tipo_documento' : this.tipo_documento,
+                    'num_documento' : this.num_documento,
+                     'direccion' : this.direccion,
+                     'distrito' : this.distrito,
+                     'provincia' : this.provincia,
+                     'edad'  : this.edad,
+                     'estado_civil' : this.estado_civil,
+                     'id' : this.persona_id
+
+                }).then(function (response) { //obtener los valores del /ofcina
+                    me.cerrarModal();
+                    me.listarPersona(1,'','num_documento');
+                })
+                .catch(function(error){ // si tenemos un error lo tapamos con un catch
+                console.log(error);
+                    });
+
+
+
+            },
             validarPersona(){
                 this.errorPersona= 0;
                 this.errorMostrarMsjPersona=[];
-            },
+                
+                if(!this.nombre) this.errorMostrarMsjPersona.push("El Nombre no puede estar vacio");
+                if(!this.tipo_documento) this.errorMostrarMsjPersona.push("El Tipo de Documento no puede estar vacio");
+                if(!this.num_documento) this.errorMostrarMsjPersona.push("El Numero de Documento no puede estar vacio");
+                if(!this.direccion) this.errorMostrarMsjPersona.push("La direccion no puede estar vacio");
+                if(!this.distrito) this.errorMostrarMsjPersona.push("La distrito no puede estar vacio");
+                if(!this.provincia) this.errorMostrarMsjPersona.push("La Provincia no puede estar vacio");
+                        
+                  if(this.errorMostrarMsjPersona.length) this.errorPersona = 1;
+
+                return this.errorPersona;  
+                },
+
+
+
 
           cerrarModal(){
              this.modal=0;
@@ -322,6 +435,19 @@
                             }
                             case 'actualizar':
                             {
+                             this.modal=1;
+                            this.tituloModal='Actualizar Persona';
+                            this.tipoAccion=2;
+                            this.persona_id=data['id'];
+                              this.nombre= data['nombre'];
+                              this.tipo_documento = data['tipo_documento'];
+                              this.num_documento = data['num_documento'];
+                              this.direccion = data['direccion'];
+                              this.distrito= data['distrito'];
+                              this.provincia = data['provincia'];
+                              this.edad = data['edad'];
+                              this.estado_civil = data['estado_civil'];
+                              break;
 
                             }
                         }
@@ -331,7 +457,7 @@
             
         },
         mounted() {
-            this.listarPersona();
+            this.listarPersona(1,this.buscarP,this.criterioP);
         }
     }
 </script>
@@ -349,6 +475,20 @@
         background-color: #3c29297a !important;
     }
     
+    
+    .div-error{
+        display:flex;
+        justify-content:center;
+
+
+    }
+
+    .text-error{
+         color: red !important;
+         font-weight: bold;
+
+
+    }
 
    
 </style>

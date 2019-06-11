@@ -18,6 +18,7 @@ window.Vue = require('vue');
 Vue.component('oficina', require('./components/Oficina.vue'));
 Vue.component('expediente', require('./components/Expediente.vue'));
 Vue.component('persona', require('./components/Persona.vue'));
+Vue.component('regexpediente', require('./components/Regexpediente.vue'));
 
 const app = new Vue({
     el: '#app',

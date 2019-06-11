@@ -19,12 +19,12 @@
                         <div class="form-group row">
                             <div class="col-md-6">
                                 <div class="input-group">
-                                    <select class="form-control col-md-3" id="opcion" name="opcion">
-                                      <option value="nombre">Nombre</option>
-                                      <option value="descripcion">Descripción</option>
+                                    <select class="form-control col-md-3" v-model="criterioExp">
+                                      <option value="codigo_documento">Codigo Doc</option>
+                                      <option value="asunto_tramite">Asunto</option>
                                     </select>
-                                    <input type="text" id="texto" name="texto" class="form-control" placeholder="Texto a buscar">
-                                    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                                    <input type="text" v-model="buscarExp" @keyup.enter="listarExpediente(1,buscarExp,criterioExp)" class="form-control" placeholder="Texto a buscar">
+                                    <button type="submit" @click="listarExpediente(1,buscarExp,criterioExp)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                 </div>
                             </div>
                         </div>
@@ -72,23 +72,14 @@
                         </table>
                         <nav>
                             <ul class="pagination">
-                                <li class="page-item">
-                                    <a class="page-link" href="#">Ant</a>
+                                 <li class="page-item" v-if="pagination.current_page > 1">
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1,buscarExp,criterioExp)">Ant</a>
                                 </li>
-                                <li class="page-item active">
-                                    <a class="page-link" href="#">1</a>
+                                <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActived ? 'active' : '']">
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(page,buscarExp,criterioExp)" v-text="page"></a>
                                 </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">2</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">3</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">4</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">Sig</a>
+                                <li class="page-item" v-if="pagination.current_page < pagination.last_page">
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1,buscarExp,criterioExp)">Sig</a>
                                 </li>
                             </ul>
                         </nav>
@@ -184,13 +175,24 @@
                                         
                                     </div>
                                 </div>
+
+                           <div v-show="errorExpediente" class="form-group row div-error">
+                                    <div class="text-center text-error">
+                                        <div v-for="error in errorMostrarMsjExpediente" :key="error" v-text="error">
+
+                                        </div>
+
+                                        </div>
+                                </div>
+
+
                             </form>
                         </div>
 
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @click="cerrarModal()" >Cerrar</button>
                            <button type="button"  v-if ="tipoAccion==1" class="btn btn-primary" @click="registrarExpediente()">Guardar</button>
-                            <button type="button"  v-if ="tipoAccion==2" class="btn btn-primary">Actualizar</button>
+                            <button type="button"  v-if ="tipoAccion==2" class="btn btn-primary" @click="actualizarExpediente()">Actualizar</button>
                         </div>
 
                     </div>
@@ -229,6 +231,7 @@
     export default {
         data() {
             return{
+                expediente_id : 0,
                 codigo_expediente :'',
              tipo_documento : '' ,
               cabecera_documento: '',
@@ -242,24 +245,84 @@
                      tituloModal : '',
                      tipoAccion : 0 ,
                      errorExpediente : 0 ,
-                     errorMostrarMsjExpediente : []
+                     errorMostrarMsjExpediente : [],
+                    pagination : {
 
+                  'total' : 0,   //total de registros
+                  'current_page' :  0, //pagina actual
+                  'per_page' : 0,  //numero de registros por pagina
+                  'last_page' : 0,  //la ultima pagina
+                  'from' : 0, // desde la pagina
+                  'to' : 0, //hasta la pagina
+              },
+              offset : 3,
+               criterioExp : 'codigo_expediente',
+              buscarExp:''
 
+           }
+        },
+
+         computed:{
+            isActived: function(){
+                return this.pagination.current_page;
+            },
+            //Calcula el numero de los elementos de la paginación
+            pagesNumber: function() {
+                //si la pagina es diferente de to(ultimo elemento de la pagina) 
+                //voy a returnar una array vacio
+                if(!this.pagination.to) {
+                    return [];
+                }
+                
+                var from = this.pagination.current_page - this.offset; 
+                if(from < 1) {
+                    from = 1;
+                }
+
+                var to = from + (this.offset * 2); 
+                if(to >= this.pagination.last_page){
+                    to = this.pagination.last_page;
+                }  
+
+                var pagesArray = [];
+                while(from <= to) {
+                    pagesArray.push(from);
+                    from++;
+                }
+                return pagesArray;             
 
             }
-        },
+        
+         },
         methods: {
-            listarExpediente (){
+            listarExpediente (page,buscarExp,criterioExp){
                 let me = this;
-                axios.get('/expediente').then(function (response) { //obtener los valores del /ofcina
-                me.arrayExpediente = response.data;
+                var url ='/expediente?page=' + page  + '&buscar=' + buscarExp + '&criterio=' + criterioExp;
+                axios.get(url).then(function (response) { //obtener los valores del /ofcina
+                var respuesta = response.data;
+                me.arrayExpediente = respuesta.expedientes.data;
+                me.pagination= respuesta.pagination;
                 })
                  .catch(function(error){ // si tenemos un error lo tapamos con un catch
                  console.log(error);
                     });
                 },
+
+            cambiarPagina(page,buscarExp,criterioExp){
+                 let me = this;
+                 //actualiza la pagina actula
+                 me.pagination.current_page = page;
+                 me.listarExpediente(page,buscarExp,criterioExp);
+            },
                 
             registrarExpediente(){
+
+                  if (this.validarExpediente()){
+                 return;
+             }
+
+
+
                 let me = this;
                 axios.post('/expediente/registrar',{
                     'codigo_expediente' : this.codigo_expediente,
@@ -272,18 +335,60 @@
 
                 }).then(function (response) { //obtener los valores del /ofcina
                      me.cerrarModal();
-                     me.listarExpediente();
+                     me.listarExpediente(1,'','codigo_expediente');
                 })
                  .catch(function(error){ // si tenemos un error lo tapamos con un catch
                  console.log(error);
                     });
 
             },
+            actualizarExpediente(){
+
+                
+                  if (this.validarExpediente()){
+                 return;
+             }
+
+
+
+                let me = this;
+                axios.put('/expediente/actualizar',{
+                    'codigo_expediente' : this.codigo_expediente,
+                    'tipo_documento' : this.tipo_documento,
+                    'cabecera_documento' : this.cabecera_documento,
+                    'asunto_tramite' : this.asunto_tramite,
+                    'nro_folio' :  this.nro_folio,
+                    'prioridad' : this.prioridad,
+                    'fecha' : this.fecha,
+                    'id' : this.expediente_id
+
+                }).then(function (response) { //obtener los valores del /ofcina
+                     me.cerrarModal();
+                     me.listarExpediente(1,'','codigo_expediente');
+                })
+                 .catch(function(error){ // si tenemos un error lo tapamos con un catch
+                 console.log(error);
+                    });
+
+
+
+            },
 
             validarExpediente(){
                 this.errorExpediente=0;
                 this.errorMostrarMsjExpediente = [];
-            },
+                 
+                if(!this.codigo_expediente) this.errorMostrarMsjExpediente.push("El Codigo  no puede estar vacio");
+                if(!this.tipo_documento) this.errorMostrarMsjExpediente.push("El Tipo de Documento no puede estar vacio");
+                if(!this.asunto_tramite) this.errorMostrarMsjExpediente.push("El Asunto de Tramite no puede estar vacio");
+                if(!this.nro_folio) this.errorMostrarMsjExpediente.push("El numero de folios no puede estar vacio");
+                if(!this.prioridad) this.errorMostrarMsjExpediente.push("La prioridad no puede estar vacio");
+                        
+                if(this.errorMostrarMsjExpediente.length) this.errorExpediente = 1;
+
+                return this.errorExpediente; 
+
+                },
             cerrarModal(){
              this.modal=0;
              this.tituloModal='';
@@ -320,6 +425,20 @@
                             }
                             case 'actualizar':
                             {
+                                this.modal = 1;
+                              this.tituloModal = 'Actualizar Expediente';
+                                  this.tipoAccion= 2;
+                                  this.expediente_id= data['id'];
+                                 this.codigo_expediente=data['codigo_expediente'];
+                              this.tipo_documento = data['tipo_documento'];
+                              this.cabecera_documento = data['cabecera_documento'];
+                              this.asunto_tramite = data['asunto_tramite'];
+                              this.nro_folio= data['nro_folio'];
+                              this.prioridad = data['prioridad'];
+                              this.fecha = data['fecha'];
+                              this.observaciones = data['observaciones'];
+                              break;
+
 
                             }
 
@@ -333,7 +452,7 @@
             
         },
         mounted() {
-            this.listarExpediente();
+            this.listarExpediente(1,this.buscarExp,this.criterioExp);
         }
     }
 </script>
@@ -352,6 +471,20 @@
         background-color: #3c29297a !important;
     }
     
+    
+    .div-error{
+        display:flex;
+        justify-content:center;
+
+
+    }
+
+    .text-error{
+         color: red !important;
+         font-weight: bold;
+
+
+    }
 
    
 </style>
