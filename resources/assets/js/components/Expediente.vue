@@ -19,12 +19,12 @@
                         <div class="form-group row">
                             <div class="col-md-6">
                                 <div class="input-group">
-                                    <select class="form-control col-md-3" v-model="criterioExp">
+                                    <select class="form-control col-md-3" v-model="criterio">
                                       <option value="codigo_documento">Codigo Doc</option>
                                       <option value="asunto_tramite">Asunto</option>
                                     </select>
-                                    <input type="text" v-model="buscarExp" @keyup.enter="listarExpediente(1,buscarExp,criterioExp)" class="form-control" placeholder="Texto a buscar">
-                                    <button type="submit" @click="listarExpediente(1,buscarExp,criterioExp)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                                    <input type="text" v-model="buscar" @keyup.enter="listarExpediente(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
+                                    <button type="submit" @click="listarExpediente(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                 </div>
                             </div>
                         </div>
@@ -73,13 +73,13 @@
                         <nav>
                             <ul class="pagination">
                                  <li class="page-item" v-if="pagination.current_page > 1">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1,buscarExp,criterioExp)">Ant</a>
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1,buscar,criterio)">Ant</a>
                                 </li>
                                 <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActived ? 'active' : '']">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(page,buscarExp,criterioExp)" v-text="page"></a>
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(page,buscar,criterio)" v-text="page"></a>
                                 </li>
                                 <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1,buscarExp,criterioExp)">Sig</a>
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1,buscar,criterio)">Sig</a>
                                 </li>
                             </ul>
                         </nav>
@@ -256,8 +256,8 @@
                   'to' : 0, //hasta la pagina
               },
               offset : 3,
-               criterioExp : 'codigo_expediente',
-              buscarExp:''
+               criterio : 'codigo_expediente',
+              buscar:''
 
            }
         },
@@ -295,9 +295,9 @@
         
          },
         methods: {
-            listarExpediente (page,buscarExp,criterioExp){
+            listarExpediente (page,buscar,criterio){
                 let me = this;
-                var url ='/expediente?page=' + page  + '&buscar=' + buscarExp + '&criterio=' + criterioExp;
+                var url ='/expediente?page=' + page  + '&buscar=' + buscar + '&criterio=' + criterio;
                 axios.get(url).then(function (response) { //obtener los valores del /ofcina
                 var respuesta = response.data;
                 me.arrayExpediente = respuesta.expedientes.data;
@@ -308,11 +308,11 @@
                     });
                 },
 
-            cambiarPagina(page,buscarExp,criterioExp){
+            cambiarPagina(page,buscar,criterio){
                  let me = this;
                  //actualiza la pagina actula
                  me.pagination.current_page = page;
-                 me.listarExpediente(page,buscarExp,criterioExp);
+                 me.listarExpediente(page,buscar,criterio);
             },
                 
             registrarExpediente(){
@@ -452,7 +452,7 @@
             
         },
         mounted() {
-            this.listarExpediente(1,this.buscarExp,this.criterioExp);
+            this.listarExpediente(1,this.buscar,this.criterio);
         }
     }
 </script>

@@ -24,6 +24,7 @@ class CreateExpedientesTable extends Migration
             $table->dateTime('fecha');
             $table->string('observaciones', 100)->nullable();
             $table->timestamps();
+            //TIMETAMPS ES PARA LAS CREATE Y UPDATE
         });
     }
 

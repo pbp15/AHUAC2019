@@ -14,8 +14,8 @@ class ExpedienteController extends Controller
         //se agregara una estructura condicional para la ruta
        if(!$request->ajax()) return redirect('/');
        
-       $buscar = $request->buscarExp;
-       $criterio = $request->criterioExp;
+       $buscar = $request->buscar;
+       $criterio = $request->criterio;
 
        if($buscar==''){
            $expedientes= Expediente::orderBy('id','desc')->paginate(2);

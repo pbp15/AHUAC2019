@@ -27,3 +27,13 @@ Route::put('/expediente/actualizar','ExpedienteController@update');
 Route::get('/persona','PersonaController@index');
 Route::post('/persona/registrar','PersonaController@store');
 Route::put('/persona/actualizar','PersonaController@update');
+
+
+Route::get('/rol','RolController@index');
+Route::get('/rol/selectRol','RolController@selectRol');
+
+Route::get('/user','UserController@index');
+Route::post('/user/registrar','UserController@store');
+Route::put('/user/actualizar','UserController@update');
+Route::post('/user/desactivar','UserController@desactivar');
+Route::put('/user/activar','UserController@activar');

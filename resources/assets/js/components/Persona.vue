@@ -240,7 +240,7 @@
             return{
                 persona_id : 0,
                 nombre :'',
-             tipo_documento : '' ,
+             tipo_documento : 'DNI' ,
               num_documento: '',
                  direccion: '',
                   distrito: '',
