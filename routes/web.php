@@ -18,15 +18,23 @@ Route::get('/', function () {
 Route::get('/oficina','OficinaController@index');
 Route::post('/oficina/registrar','OficinaController@store');
 Route::put('/oficina/actualizar','OficinaController@update');
+Route::get('/oficina/selectOficina','OficinaController@selectOficina');
 
 Route::get('/expediente','ExpedienteController@index');
 Route::post('/expediente/registrar','ExpedienteController@store');
 Route::put('/expediente/actualizar','ExpedienteController@update');
+Route::get('/expediente/selectExpediente','ExpedienteController@selectExpediente');
+
+
+Route::get('/regexpediente','RegexpedienteController@index');
+Route::post('/regexpediente/registrar','RegexpedienteController@store');
+Route::put('/regexpediente/desactivar','RegexpedienteController@desactivar');
 
 
 Route::get('/persona','PersonaController@index');
 Route::post('/persona/registrar','PersonaController@store');
 Route::put('/persona/actualizar','PersonaController@update');
+Route::get('/persona/selectPersona','PersonaController@selectPersona');
 
 
 Route::get('/rol','RolController@index');

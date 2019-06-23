@@ -3,28 +3,27 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-//use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 use App\Expediente;
 
 class ExpedienteController extends Controller
 {
+  
+
     public function index(Request $request)
     {
+       if (!$request->ajax()) return redirect('/');
 
-        //se agregara una estructura condicional para la ruta
-       if(!$request->ajax()) return redirect('/');
-       
-       $buscar = $request->buscar;
-       $criterio = $request->criterio;
-
-       if($buscar==''){
-           $expedientes= Expediente::orderBy('id','desc')->paginate(2);
-
-       }
-       else{
-           $expedientes = Expediente::where($criterio, 'like','%',$buscar .'%')->orderBy('id','desc')->paginate(2);
-       }
-
+        $buscar = $request->buscar;
+        $criterio = $request->criterio;
+        
+        if ($buscar==''){
+            $expedientes = Expediente::orderBy('id', 'desc')->paginate(2);
+        }
+        else{
+            $expedientes = Expediente::where($criterio, 'like', '%'. $buscar . '%')->orderBy('id', 'desc')->paginate(2);
+        }
+        
 
         return [
             'pagination' => [
@@ -36,14 +35,27 @@ class ExpedienteController extends Controller
                 'to'           => $expedientes->lastItem(),
             ],
             'expedientes' => $expedientes
-      
         ];
     }
 
+    public function selectExpediente(Request $request){
+        if (!$request->ajax()) return redirect('/');
+ 
+         $filtro = $request->filtro;     
+         $expedientes = Expediente::where('codigo_expediente', 'like', '%'. $filtro . '%')
+         ->select('id','codigo_expediente')
+         ->orderBy('codigo_expediente', 'asc')->get();
+ 
+         return ['expedientes' => $expedientes];
+ 
+     }
 
     public function store(Request $request)
     {
-        if(!$request->ajax()) return redirect('/');
+        if (!$request->ajax()) return redirect('/');
+
+        $mytime = Carbon::now('America/Lima');
+
         $expediente = new Expediente();
         $expediente ->codigo_expediente = $request->codigo_expediente;
         $expediente ->tipo_documento = $request->tipo_documento;
@@ -51,17 +63,18 @@ class ExpedienteController extends Controller
         $expediente ->asunto_tramite = $request->asunto_tramite;
         $expediente ->nro_folio = $request->nro_folio;
         $expediente ->prioridad = $request->prioridad;
-        $expediente ->fecha = $request->fecha;
+        $expediente ->fecha = $mytime->toDateString();
         $expediente ->observaciones = $request->observaciones;
         $expediente ->save();
 
     }
 
+
  
   
     public function update(Request $request, $id)
     {
-        if(!$request->ajax()) return redirect('/');
+        if (!$request->ajax()) return redirect('/');
         $expediente = Expediente::findOrFail($request->id);
         $expediente ->codigo_expediente = $request->codigo_expediente;
         $expediente ->tipo_documento = $request->tipo_documento;
@@ -69,7 +82,6 @@ class ExpedienteController extends Controller
         $expediente ->asunto_tramite = $request->asunto_tramite;
         $expediente ->nro_folio = $request->nro_folio;
         $expediente ->prioridad = $request->prioridad;
-        $expediente ->fecha = $request->fecha;
         $expediente ->observaciones = $request->observaciones;
         $expediente ->save();
     }

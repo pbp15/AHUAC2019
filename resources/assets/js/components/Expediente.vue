@@ -20,8 +20,9 @@
                             <div class="col-md-6">
                                 <div class="input-group">
                                     <select class="form-control col-md-3" v-model="criterio">
-                                      <option value="codigo_documento">Codigo Doc</option>
+                                      <option value="codigo_expediente">Codigo Doc</option>
                                       <option value="asunto_tramite">Asunto</option>
+                                      <option value="tipo_documento">Tipo Doc</option>
                                     </select>
                                     <input type="text" v-model="buscar" @keyup.enter="listarExpediente(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
                                     <button type="submit" @click="listarExpediente(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
@@ -32,7 +33,7 @@
                         <table class="table table-bordered table-striped table-sm">
                             <thead>
                                 <tr>
-                                    <th>Opciones</th>
+                                 
                                     <th>Codigo</th>
                                     <th>Tipo documento</th>
                                     <th>Cabecera Documento</th>
@@ -40,7 +41,8 @@
                                     <th>Nro folio</th>
                                      <th>Prioridad</th>
                                     <th>Fecha</th>
-                                    <th>Observaciones</th>                                    
+                                    <th>Observaciones</th> 
+                                     <th>Opciones</th>                                   
                                     
                                 </tr>
                             </thead>
@@ -48,14 +50,7 @@
                             DONDE NOS APOYAREMOS DE V-FOR PARA EMPEZAR -->
                             <tbody >
                                 <tr v-for="expediente in arrayExpediente" :key="expediente.id">
-                                    <td>
-                                        <button type="button"  @click="abrirModal('expediente','actualizar',expediente)"  class="btn btn-warning btn-sm" >
-                                          <i class="icon-pencil"></i>
-                                        </button> &nbsp;
-                                        <button type="button" class="btn btn-danger btn-sm" >
-                                          <i class="icon-trash"></i>
-                                        </button>
-                                    </td>
+                                    
                             <!-- v-text `para mostrar las columna de los datos de la tabla dinamica -->
                                     <td v-text="expediente.codigo_expediente"></td>
                                     <td v-text="expediente.tipo_documento"></td>
@@ -65,6 +60,14 @@
                                     <td v-text="expediente.prioridad"></td>
                                     <td v-text="expediente.fecha"></td>
                                     <td v-text="expediente.observaciones"></td>
+                                    <td>
+                                        <button type="button"  @click="abrirModal('expediente','actualizar',expediente)"  class="btn btn-warning btn-sm" >
+                                          <i class="icon-pencil"></i>
+                                        </button> &nbsp;
+                                        <button type="button" class="btn btn-danger btn-sm" >
+                                          <i class="icon-trash"></i>
+                                        </button>
+                                    </td>
                                  
                                 </tr>
                                
@@ -161,14 +164,6 @@
                                 </div>
                                
                              <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Fecha</label>
-                                    <div class="col-md-9">
-                                        <input type="text"   v-model="fecha"  class="form-control" >
-                                        
-                                    </div>
-                                </div>
-
-                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Observaciones</label>
                                     <div class="col-md-9">
                                         <input type="text"   v-model="observaciones"  class="form-control" placeholder="Coloca las observaciones">
@@ -228,6 +223,7 @@
 </template>
 
 <script>
+
     export default {
         data() {
             return{
@@ -331,7 +327,7 @@
                     'asunto_tramite' : this.asunto_tramite,
                     'nro_folio' :  this.nro_folio,
                     'prioridad' : this.prioridad,
-                    'fecha' : this.fecha
+                    'observaciones' : this.observaciones
 
                 }).then(function (response) { //obtener los valores del /ofcina
                      me.cerrarModal();
@@ -358,8 +354,8 @@
                     'cabecera_documento' : this.cabecera_documento,
                     'asunto_tramite' : this.asunto_tramite,
                     'nro_folio' :  this.nro_folio,
-                    'prioridad' : this.prioridad,
-                    'fecha' : this.fecha,
+                    'prioridad' : this.prioridad,                    
+                    'observaciones' : this.observaciones,
                     'id' : this.expediente_id
 
                 }).then(function (response) { //obtener los valores del /ofcina
@@ -417,7 +413,6 @@
                               this.asunto_tramite = '';
                               this.nro_folio= '';
                               this.prioridad = 'Urgente';
-                              this.fecha = '';
                               this.observaciones = '';
                               this.tipoAccion= 1;
                               break;
@@ -435,7 +430,6 @@
                               this.asunto_tramite = data['asunto_tramite'];
                               this.nro_folio= data['nro_folio'];
                               this.prioridad = data['prioridad'];
-                              this.fecha = data['fecha'];
                               this.observaciones = data['observaciones'];
                               break;
 
@@ -460,31 +454,26 @@
 
 <style>
 
-    .modal-content {
-        width : 100% !important;
-        position :absolute !important;
+        .modal-content {
+            width : 100% !important;
+            position :absolute !important;
+            }
+        .mostrar {
+            display: list-item !important;
+            opacity: 1 !important;
+            position: absolute !important;
+            background-color: #3c29297a !important;
+          }   
+        
+        .div-error{
+            display:flex;
+            justify-content:center;
+
+
+         }
+        .text-error{
+            color: red !important;
+            font-weight: bold;
         }
-    .mostrar {
-        display: list-item !important;
-        opacity: 1 !important;
-        position: absolute !important;
-        background-color: #3c29297a !important;
-    }
-    
-    
-    .div-error{
-        display:flex;
-        justify-content:center;
-
-
-    }
-
-    .text-error{
-         color: red !important;
-         font-weight: bold;
-
-
-    }
-
-   
+  
 </style>

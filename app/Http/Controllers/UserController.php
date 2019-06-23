@@ -63,12 +63,11 @@ class UserController extends Controller
             $persona->save();
 
             $user = new User();
+            $user->id = $persona->id;
+            $user->idrol =  $request->idrol;
             $user->usuario = $request->usuario;
             $user->password = bcrypt($request->password);
             $user->condicion = '1';
-            $user->idrol =  $request->idrol;
-
-            $user->id = $persona->id;
             // al id usario le vamos a mandar lo q se a
             //insertado en el obejto persona
             $user->save();
@@ -91,7 +90,7 @@ class UserController extends Controller
             DB::beginTransaction();
 
             //Buscar primero el proveedor a modificar
-            $proveedor = User::findOrFail($request->id);
+            $user = User::findOrFail($request->id);
 
             $persona = Persona::findOrFail($user->id);
 
@@ -120,7 +119,7 @@ class UserController extends Controller
     public function desactivar(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
-        $categoria = User::findOrFail($request->id);
+        $user = User::findOrFail($request->id);
         $user->condicion = '0';
         $user->save();
     }
@@ -128,7 +127,7 @@ class UserController extends Controller
     public function activar(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
-        $user = user::findOrFail($request->id);
+        $user = User::findOrFail($request->id);
         $user->condicion = '1';
         $user->save();
     }

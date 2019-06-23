@@ -27,6 +27,7 @@
                             <li @click="menu=4" class="nav-item">
                                 <a class="nav-link" href="#"><i class="icon-notebook"></i> Solicitante</a>
                             </li>
+
                         </ul>
                     </li>
                     <li class="nav-item nav-dropdown">
@@ -35,6 +36,7 @@
                             <li @click="menu=5" class="nav-item">
                                 <a class="nav-link" href="#"><i class="icon-basket-loaded"></i> Registro </a>
                             </li>
+
                          
                         </ul>
                     </li>

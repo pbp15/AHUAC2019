@@ -3,30 +3,26 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-//use Illuminate\Support\Facades\DB;
 use App\Oficina;
 
 class OficinaController extends Controller
 {
-    
     public function index(Request $request)
     {
+        if (!$request->ajax()) return redirect('/');
 
-        //se agregara una estructura condicional para la ruta
-        //el paginate es cuanto registro quiero q se vea por pagina
-        if(!$request->ajax()) return redirect('/');
+        $buscar = $request->buscar;
+        $criterio = $request->criterio;
         
-        $buscar = $request->buscarO;
-        $criterio = $request->criterioO;
-
-        if($buscar==''){
-            $oficinas= Oficina::orderBy('id','desc')->paginate(2);
-
+        if ($buscar==''){
+            $oficinas = Oficina::orderBy('id', 'desc')
+            ->paginate(3);
         }
         else{
-            $oficinas = Oficina::where($criterio, 'like','%',$buscar .'%')->orderBy('id','desc')->paginate(2);
+            $oficinas = Oficina::where($criterio, 'like', '%'. $buscar . '%')
+            ->orderBy('id', 'desc')->paginate(3);
         }
-
+        
 
         return [
             'pagination' => [
@@ -38,14 +34,26 @@ class OficinaController extends Controller
                 'to'           => $oficinas->lastItem(),
             ],
             'oficinas' => $oficinas
-      
         ];
-}
+    }
+
+    public function selectOficina(Request $request){
+        if (!$request->ajax()) return redirect('/');
+ 
+         $filtro = $request->filtro;     
+         $oficinas = Oficina::where('unidad_organica', 'like', '%'. $filtro . '%')
+         ->orWhere('responsable', 'like', '%'. $filtro . '%')
+         ->select('id','unidad_organica','responsable')
+         ->orderBy('unidad_organica', 'asc')->get();
+ 
+         return ['oficinas' => $oficinas];
+ 
+     }
 
 
     public function store(Request $request)
     {
-        if(!$request->ajax()) return redirect('/');
+        if (!$request->ajax()) return redirect('/');
         $oficina = new Oficina();
         $oficina ->unidad_organica = $request->unidad_organica;
         $oficina ->division = $request->division;
@@ -54,11 +62,13 @@ class OficinaController extends Controller
 
     }
 
+
  
   
     public function update(Request $request, $id)
     {
-        if(!$request->ajax()) return redirect('/');
+
+        if (!$request->ajax()) return redirect('/');
         $oficina = Oficina::findOrFail($request->id);
         $oficina ->unidad_organica = $request->unidad_organica;
         $oficina ->division = $request->division;

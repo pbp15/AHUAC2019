@@ -19,27 +19,33 @@
                         <div class="form-group row">
                             <div class="col-md-6">
                                 <div class="input-group">
-                                    <select class="form-control col-md-3" v-model="criterioO">
+                                    <select class="form-control col-md-3" v-model="criterio">
                                       <option value="unidad_organica">Unidad Organica</option>
                                       <option value="responsable">Responsable</option>
                                     </select>
-                                    <input type="text" v-model="buscarO" @keyup.enter="listarOficina(1,buscarO,criterioO)" class="form-control" placeholder="Texto a buscar">
-                                    <button type="submit" @click="listarOficina(1,buscarO,criterioO)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                                    <input type="text" v-model="buscar" @keyup.enter="listarOficina(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
+                                    <button type="submit" @click="listarOficina(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                 </div>
                             </div>
                         </div>
                         <table class="table table-bordered table-striped table-sm">
                             <thead>
                                 <tr>
-                                    <th>Opciones</th>
+                                
                                     <th>Unidad Orgánica</th>
                                     <th>División</th>
                                     <th>Responsable</th>
+                                     <th>Opciones</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <!-- v-for PARA MOSTRAR LA LISTA DE LA BASE DE DATOS EN LA TABLA -->
                                 <tr v-for="oficina in arrayOficina" :key="oficina.id">
+                                  
+                                <!-- v-text para mostrar las columnas de los datos para que la tabla sea dinamica  -->
+                                    <td v-text="oficina.unidad_organica"></td>
+                                    <td v-text="oficina.division"></td>
+                                    <td v-text="oficina.responsable"></td>  
                                     <td>
                                         <button type="button" @click="abrirModal('oficina','actualizar',oficina)" class="btn btn-warning btn-sm" >
                                           <i class="icon-pencil"></i>
@@ -47,24 +53,20 @@
                                         <button type="button" class="btn btn-danger btn-sm" >
                                           <i class="icon-trash"></i>
                                         </button>
-                                    </td>
-                                <!-- v-text para mostrar las columnas de los datos para que la tabla sea dinamica  -->
-                                    <td v-text="oficina.unidad_organica"></td>
-                                    <td v-text="oficina.division"></td>
-                                    <td v-text="oficina.responsable"></td>                                    
+                                    </td>                                  
                                 </tr>                               
                             </tbody>
                         </table>
                         <nav>
                             <ul class="pagination">
                                  <li class="page-item" v-if="pagination.current_page > 1">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1,buscarO,criterioO)">Ant</a>
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1,buscar,criterio)">Ant</a>
                                 </li>
                                 <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActived ? 'active' : '']">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(page,buscarO,criterioO)" v-text="page"></a>
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(page,buscar,criterio)" v-text="page"></a>
                                 </li>
                                 <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1,buscarO,criterioO)">Sig</a>
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1,buscar,criterio)">Sig</a>
                                 </li>
                             </ul>
                         </nav>
@@ -189,8 +191,8 @@
                   'to' : 0, //hasta la pagina
               },
               offset : 3,
-              criterioO : 'unidad_organica',
-              buscarO:''
+              criterio : 'unidad_organica',
+              buscar:''
 
            }
         },
@@ -228,9 +230,9 @@
         
          },
         methods: {
-            listarOficina (page,buscarO,criterioO){
+            listarOficina (page,buscar,criterio){
                 let me=this;
-                var url ='/oficina?page=' + page + '&buscar=' + buscarO + '&criterio=' + criterioO;
+                var url ='/oficina?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
                 axios.get(url).then(function (response) { //obtener los valores del /ofcina
                      var respuesta = response.data;
                      me.arrayOficina =  respuesta.oficinas.data;  // esto es para almacenar todo el contenido en el array
@@ -241,11 +243,11 @@
                     });
                 },
 
-            cambiarPagina(page,buscarO,criterioO){
+            cambiarPagina(page,buscar,criterio){
                 let me = this;
                 //actualiza la pagina actual
-                me.pagination.current_page= page;
-                me.listarOficina(page,buscarO,criterioO);
+                me.pagination.current_page = page;
+                me.listarOficina(page,buscar,criterio);
  
             },
          registrarOficina(){
@@ -341,11 +343,7 @@
                              this.division = data['division'];
                              this.responsable = data['responsable'];
                       
-                            break;
-
-
-
-                              
+                            break;                  
 
                               
 
@@ -361,7 +359,7 @@
             
         },
         mounted() {
-            this.listarOficina(1,this.buscarO,this.criterioO);
+            this.listarOficina(1,this.buscar,this.criterio);
         }
     }
 </script>
@@ -392,8 +390,7 @@
          font-weight: bold;
 
 
-    }
-    
+    }   
 
    
 </style>

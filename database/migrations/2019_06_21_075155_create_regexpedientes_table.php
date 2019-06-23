@@ -13,7 +13,7 @@ class CreateRegexpedientesTable extends Migration
      */
     public function up()
     {
-        Schema::create('_regexpedientes', function (Blueprint $table) {
+        Schema::create('regexpedientes', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('idexpediente')->unsigned();
             $table->foreign('idexpediente')->references('id')->on('expedientes');
@@ -34,6 +34,6 @@ class CreateRegexpedientesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('_regexpedientes');
+        Schema::dropIfExists('regexpedientes');
     }
 }

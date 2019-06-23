@@ -3,43 +3,87 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use App\Regexpediente;
 
 class RegexpedienteController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $regexpedientes = Regexpediente::all();
-        return $regexpedientes;
+      //if (!$request->ajax()) return redirect('/');
+
+        $buscar = $request->buscar;
+        $criterio = $request->criterio;
+        
+        if ($buscar==''){
+            $regexpedientes = Regexpediente::join('expedientes','regexpedientes.idexpediente','=','expedientes.id')
+            ->join('personas','regexpedientes.idpersona','=','personas.id')
+            ->join('oficinas','regexpedientes.idoficina','=','oficinas.id')
+            ->select('regexpedientes.id','regexpedientes.fecha_tramite','regexpedientes.estado_tramite',
+            'expedientes.codigo_expediente','personas.nombre','oficinas.unidad_organica')
+            ->orderBy('regexpedientes.id', 'desc')->paginate(3);
+        }
+        else{
+            $regexpedientes = Regexpediente::join('expedientes','regexpedientes.idexpediente','=','expedientes.id')
+            ->join('personas','regexpedientes.idpersona','=','personas.id')
+            ->join('oficinas','regexpedientes.idoficina','=','oficinas.id')
+            ->select('regexpedientes.id','regexpedientes.fecha_tramite','regexpedientes.estado_tramite',
+            'expedientes.codigo.expediente','personas.nombre','oficinas.unidad_organica')
+            ->orderBy('regexpedientes.id', 'desc')->paginate(3)          
+            ->where('regexpedientes.'.$criterio, 'like', '%'. $buscar . '%')
+            ->orderBy('regexpedientes.id', 'desc')->paginate(3);
+        }
+        
+
+        return [
+            'pagination' => [
+                'total'        => $regexpedientes->total(),
+                'current_page' => $regexpedientes->currentPage(),
+                'per_page'     => $regexpedientes->perPage(),
+                'last_page'    => $regexpedientes->lastPage(),
+                'from'         => $regexpedientes->firstItem(),
+                'to'           => $regexpedientes->lastItem(),
+            ],
+            'regexpedientes' => $regexpedientes
+        ];
     }
+
 
 
     public function store(Request $request)
     {
-        $regexpediente = new Regexpediente();
-        $regexpediente->nombre = $request->nombre;
-        $regexpediente->tipo_documento = $request->tipo_documento;
-        $regexpediente->num_documento = $request->num_documento;
-        $regexpediente->direccion = $request->direccion;
-        $regexpediente->distrito = $request->distrito;
-        $regexpediente->provincia = $request->provincia;
-        $regexpediente->edad = $request->edad;        
-        $regexpediente->estado_civil = $request->estado_civil;
-        $regexpediente->save();
+        if (!$request->ajax()) return redirect('/');
+        
+        try{
+            DB::beginTransaction();
+            $mytime = Carbon::now('America/Lima');
 
+            $regexpediente = new Regexpediente();
+            $regexpediente->idexpediente = $request->idexpediente;
+            $regexpediente->idpersona = $request->idpersona;
+            $regexpediente->idoficina = $request->idoficina;
+            $regexpediente->fecha_tramite = $mytime->toDateString();
+            $regexpediente->estado_tramite ='Registrado';
+            $regexpediente->save();        
+
+            DB::commit();
+
+        } catch (Exception $e){
+            DB::rollBack();
+        }
+
+        
+        
     }
-
- 
-  
-    public function update(Request $request, $id)
+    public function desactivar(Request $request)
     {
-        $persona = Persona::findOrFail($request->id);
-        $persona->nombre = $request->nombre;
-        $persona->tipo_documento = $request->tipo_documento;
-        $persona->num_documento = $request->num_documento;
-        $persona->direccion = $request->direccion;
-        $persona->telefono = $request->telefono;
-        $persona->estado_civil = $request->estado_civil;
-        $persona->save();
+        if (!$request->ajax()) return redirect('/');
+        $regexpediente = Regexpediente::findOrFail($request->id);
+        $regexpediente->estado_tramite = 'Anulado';
+        $regexpediente->save();
     }
 }
+
+   
+

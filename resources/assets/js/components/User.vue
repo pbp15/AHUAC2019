@@ -30,28 +30,40 @@
                         <table class="table table-bordered table-striped table-sm">
                             <thead>
                                 <tr>
-                                    <th>Opciones</th>
+                                  
                                     <th>Nombre</th>
                                     <th>Tipo Documento</th>
                                     <th>Número</th>
                                     <th>Dirección</th>
                                     <th>Usuario</th>
                                     <th>Rol</th>
+                                    <th>Opciones</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="persona in arrayPersona" :key="persona.id">
-                                    <td>
-                                        <button type="button" @click="abrirModal('persona','actualizar',persona)" class="btn btn-warning btn-sm">
-                                          <i class="icon-pencil"></i>
-                                        </button>
-                                    </td>
+                                    
                                     <td v-text="persona.nombre"></td>
                                     <td v-text="persona.tipo_documento"></td>
                                     <td v-text="persona.num_documento"></td>
                                     <td v-text="persona.direccion"></td>
                                     <td v-text="persona.usuario"></td>
                                     <td v-text="persona.rol"></td>
+                                     <td>
+                                        <button type="button" @click="abrirModal('persona','actualizar',persona)" class="btn btn-warning btn-sm">
+                                          <i class="icon-pencil"></i>
+                                        </button>&nbsp;
+                                        <template v-if="persona.condicion">
+                                            <button type="button" class="btn btn-danger btn-sm" @click="desactivarUsuario(persona.id)">
+                                                <i class="icon-trash"></i>
+                                            </button>
+                                        </template>
+                                        <template v-else>
+                                            <button type="button" class="btn btn-info btn-sm" @click="activarUsuario(persona.id)">
+                                                <i class="icon-check"></i>
+                                            </button>
+                                        </template>
+                                    </td>
                                 </tr>                                
                             </tbody>
                         </table>
@@ -95,7 +107,6 @@
                                     <div class="col-md-9">
                                         <select v-model="tipo_documento" class="form-control">
                                             <option value="DNI">DNI</option>
-                                            <option value="RUC">RUC</option>
                                             <option value="PASS">PASS</option>
                                         </select>                                    
                                     </div>
@@ -117,7 +128,7 @@
                                     <label class="col-md-3 form-control-label" for="email-input">Rol</label>
                                     <div class="col-md-9">
                                        <select class="form-control" v-model="idrol">
-                                           <option value="0">Seleccione un rol</option>
+                                           <option value="0" disabled>Seleccione un rol</option>
                                            <option v-for="rol in arrayRol" :key="rol.id" :value="rol.id" v-text="rol.nombre">
                                         </option>
                                        </select>
@@ -126,7 +137,7 @@
                            <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="email-input">Usuario(*)</label>
                                     <div class="col-md-9">
-                                        <input type="password" v-model="usuario" class="form-control" placeholder="Nombre del usuario">
+                                        <input type="text" v-model="usuario" class="form-control" placeholder="Nombre del usuario">
                                     </div>
                                 </div>
                    
@@ -172,7 +183,7 @@
                 direccion : '',
                 usuario : '',
                 password : '',
-                idrol : 0,
+                idrol : '',
                 arrayPersona : [],
                 arrayRol:[],
                 modal : 0,
@@ -240,8 +251,9 @@
                     let me=this;
                 var url= '/rol/selectRol';
                 axios.get(url).then(function (response) {
+                       //console.log(response);
                     var respuesta= response.data;
-                    me.arrayPersona = respuesta.personas.roles;
+                    me.arrayRol = respuesta.roles;
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -262,16 +274,14 @@
                 
                 let me = this;
 
-                axios.post('/proveedor/registrar',{
+                axios.post('/user/registrar',{
                     'nombre': this.nombre,
                     'tipo_documento': this.tipo_documento,
                     'num_documento' : this.num_documento,
-                    'direccion' : this.direccion,
-                    'telefono' : this.telefono,
-                    'email' : this.email,
-                    'contacto': this.contacto,
-                    'telefono_contacto': this.telefono_contacto
-
+                    'direccion' : this.direccion,           
+                    'idrol' : this.idrol,
+                    'usuario': this.usuario,
+                    'password': this.password
                 }).then(function (response) {
                     me.cerrarModal();
                     me.listarPersona(1,'','nombre');
@@ -286,15 +296,14 @@
                 
                 let me = this;
 
-                axios.put('/proveedor/actualizar',{
+                axios.put('/user/actualizar',{
                     'nombre': this.nombre,
                     'tipo_documento': this.tipo_documento,
                     'num_documento' : this.num_documento,
                     'direccion' : this.direccion,
-                    'telefono' : this.telefono,
-                    'email' : this.email,
-                    'contacto': this.contacto,
-                    'telefono_contacto': this.telefono_contacto,
+                    'idrol' : this.idrol,
+                    'usuario': this.usuario,
+                    'password': this.password,
                     'id': this.persona_id
                 }).then(function (response) {
                     me.cerrarModal();
@@ -307,8 +316,11 @@
                 this.errorPersona=0;
                 this.errorMostrarMsjPersona =[];
 
-                if (!this.nombre) this.errorMostrarMsjPersona.push("El nombre de la persona no puede estar vacío.");
-
+               
+                if (!this.nombre) this.errorMostrarMsjPersona.push("El nombre de la pesona no puede estar vacío.");
+                if (!this.usuario) this.errorMostrarMsjPersona.push("El nombre de usuario no puede estar vacío.");
+                if (!this.password) this.errorMostrarMsjPersona.push("La password del usuario no puede estar vacía.");
+                if (this.idrol==0) this.errorMostrarMsjPersona.push("Seleccione una Role.");
                 if (this.errorMostrarMsjPersona.length) this.errorPersona = 1;
 
                 return this.errorPersona;
@@ -365,7 +377,93 @@
                         }
                     }
                 }
-            }
+        },
+
+
+        
+            desactivarUsuario(id){
+               swal({
+                title: 'Esta seguro de desactivar este usuario?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Aceptar!',
+                cancelButtonText: 'Cancelar',
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger',
+                buttonsStyling: false,
+                reverseButtons: true
+                }).then((result) => {
+                if (result.value) {
+                    let me = this;
+
+                    axios.put('/user/desactivar',{
+                        'id': id
+                    }).then(function (response) {
+                        me.listarPersona(1,'','nombre');
+                        swal(
+                        'Desactivado!',
+                        'El registro ha sido desactivado con éxito.',
+                        'success'
+                        )
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+                    
+                    
+                } else if (
+                    // Read more about handling dismissals
+                    result.dismiss === swal.DismissReason.cancel
+                ) {
+                    
+                }
+                }) 
+            },
+            activarUsuario(id){
+               swal({
+                title: 'Esta seguro de activar este usuario?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Aceptar!',
+                cancelButtonText: 'Cancelar',
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger',
+                buttonsStyling: false,
+                reverseButtons: true
+                }).then((result) => {
+                if (result.value) {
+                    let me = this;
+
+                    axios.put('/user/activar',{
+                        'id': id
+                    }).then(function (response) {
+                        me.listarPersona(1,'','nombre');
+                        swal(
+                        'Activado!',
+                        'El registro ha sido activado con éxito.',
+                        'success'
+                        )
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+                    
+                    
+                } else if (
+                    // Read more about handling dismissals
+                    result.dismiss === swal.DismissReason.cancel
+                ) {
+                    
+                }
+                }) 
+            },
+
+
+
+
+
         },
         mounted() {
             this.listarPersona(1,this.buscar,this.criterio);

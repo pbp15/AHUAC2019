@@ -19,12 +19,12 @@
                         <div class="form-group row">
                             <div class="col-md-6">
                                 <div class="input-group">
-                                    <select class="form-control col-md-3" v-model="criterioP">
+                                    <select class="form-control col-md-3" v-model="criterio">
                                       <option value="num_documento">Nº Doc</option>
                                       <option value="nombre">Nombre</option>
                                     </select>
-                                    <input type="text" v-model="buscarP" @keyup.enter="listarPersona(1,buscarP,criterioP)" class="form-control" placeholder="Texto a buscar">
-                                    <button type="submit" @click=" listarPersona(1,buscarP,criterioP)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                                    <input type="text" v-model="buscar" @keyup.enter="listarPersona(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
+                                    <button type="submit" @click=" listarPersona(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                 </div>
                             </div>
                         </div>
@@ -36,7 +36,7 @@
                         <table class="table table-bordered table-striped table-sm">
                             <thead>
                                 <tr>
-                                    <th>Opciones</th>
+                                 
                                     <th>Nombre</th>
                                     <th>tipo_documento</th>
                                     <th>num_documento</th>
@@ -45,20 +45,14 @@
                                     <th>provincia</th>
                                     <th>edad</th>
                                     <th>estado_civil</th>
+                                     <th>Opciones</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <!--  EN ESTE APARTADO MOSTRAREMOS LOS DATOS DE LA BD EN LA TABLA DINAMICA
                                 APOYANDONOS DE LA DIRECTIVA V-FOR-->
                                 <tr  v-for ="persona in arrayPersona" :key="persona.id">
-                                    <td>
-                                        <button type="button" @click="abrirModal('oficina','actualizar',persona)"  class="btn btn-warning btn-sm" >
-                                          <i class="icon-pencil"></i>
-                                        </button> &nbsp;
-                                        <button type="button" class="btn btn-danger btn-sm">
-                                          <i class="icon-trash"></i>
-                                        </button>
-                                    </td>
+                                   
                                 <!-- utilizaremos v-text para mostrar los datos de la columnas siguientes -->
                                  <td v-text="persona.nombre"></td>
                                   <td v-text="persona.tipo_documento"></td>
@@ -67,7 +61,15 @@
                                   <td v-text="persona.distrito"></td>
                                   <td v-text="persona.provincia"></td>
                                   <td v-text="persona.edad"></td>
-                                  <td v-text="persona.estado_civil"></td>                                                      
+                                  <td v-text="persona.estado_civil"></td>         
+                                     <td>
+                                        <button type="button" @click="abrirModal('persona','actualizar',persona)"  class="btn btn-warning btn-sm" >
+                                          <i class="icon-pencil"></i>
+                                        </button> &nbsp;
+                                        <button type="button" class="btn btn-danger btn-sm">
+                                          <i class="icon-trash"></i>
+                                        </button>
+                                    </td>                                             
                                                                       
                                 </tr>
                                
@@ -76,13 +78,13 @@
                         <nav>
                             <ul class="pagination">
                                 <li class="page-item" v-if="pagination.current_page > 1">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1,buscarP,criterioP)">Ant</a>
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1,buscar,criterio)">Ant</a>
                                 </li>
                                 <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActived ? 'active' : '']">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(page,buscarP,criterioP)" v-text="page"></a>
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(page,buscar,criterio)" v-text="page"></a>
                                 </li>
                                 <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1,buscarP,criterioP)">Sig</a>
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1,buscar,criterio)">Sig</a>
                                 </li>
                             </ul>
                         </nav>
@@ -125,7 +127,6 @@
                                     <div class="col-md-9">
                                         <select v-model="tipo_documento" class="form-control">
                                             <option value="DNI">DNI</option>
-                                            <option value="RUC">RUC</option>
                                             <option value="PASS">PASS</option>
                                         </select>                                    
                                     </div>
@@ -175,7 +176,7 @@
                                  <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Estado Civil</label>
                                     <div class="col-md-9">
-                                        <select v-model="tipo_documento" class="form-control">
+                                        <select v-model="estado_civil" class="form-control">
                                             <option value="SOLTERO">SOLTERO(A)</option>
                                             <option value="CASADO">CASADO(A)</option>
                                             <option value="DIVORCIADO">DIVORCIADO(A)</option>
@@ -197,12 +198,13 @@
                                 
                             </form>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
-                            <button type="button"  v-if ="tipoAccion==1" class="btn btn-primary" @click="registrarPersona()">Guardar</button>
-                            <button type="button"  v-if ="tipoAccion==2" class="btn btn-primary" @click="actualizarPersona()">Actualizar</button>
-                        </div>
-                    </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
+                                <button type="button"  v-if ="tipoAccion==1" class="btn btn-primary" @click="registrarPersona()">Guardar</button>
+                                <button type="button"  v-if ="tipoAccion==2" class="btn btn-primary" @click="actualizarPersona()">Actualizar</button>
+                            </div>
+                            
+                     </div>
                     <!-- /.modal-content -->
                 </div>
                 <!-- /.modal-dialog -->
@@ -242,12 +244,12 @@
                 nombre :'',
              tipo_documento : 'DNI' ,
               num_documento: '',
-                 direccion: '',
-                  distrito: '',
-                   provincia: '',
-                    edad : '',
-                     estado_civil : '',
-                     arrayPersona : [],
+                direccion: '',
+                distrito: '',
+                provincia: '',
+                edad : '',
+                estado_civil : 'SOLTERO(A)',
+                arrayPersona : [],
                      modal : 0,
                      tituloModal : '',
                        tipoAccion : 0 ,
@@ -263,8 +265,8 @@
                   'to' : 0, //hasta la pagina
               },
               offset : 3,
-               criterioP : 'num_documento',
-              buscarP:''
+               criterio : 'num_documento',
+              buscar:''
 
            }
         },
@@ -304,9 +306,9 @@
 
 
         methods: {
-            listarPersona (page,buscarP,criterioP){
+            listarPersona (page,buscar,criterio){
                 let me = this;
-                var url ='/persona?page=' + page + '&buscar=' + buscarP + '&criterio=' + criterioP;
+                var url ='/persona?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
                 axios.get(url).then(function (response) { //obtener los valores del /ofcina
                    var respuesta = response.data; 
                     me.arrayPersona = respuesta.personas.data;
@@ -317,11 +319,11 @@
                     });
                 },
 
-            cambiarPagina(page,buscarP,criterioP){ //ESTE METODO RECIBE EL PARAMETRO PAGE
+            cambiarPagina(page,buscar,criterio){ //ESTE METODO RECIBE EL PARAMETRO PAGE
                 let me = this;
                 //actualiza la pagina actual
                 me.pagination.current_page =page;
-                me.listarPersona(page,buscarP,criterioP);
+                me.listarPersona(page,buscar,criterio);
             },
 
             registrarPersona(){
@@ -457,7 +459,7 @@
             
         },
         mounted() {
-            this.listarPersona(1,this.buscarP,this.criterioP);
+            this.listarPersona(1,this.buscar,this.criterio);
         }
     }
 </script>
