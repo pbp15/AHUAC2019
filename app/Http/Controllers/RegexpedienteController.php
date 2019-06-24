@@ -11,14 +11,14 @@ class RegexpedienteController extends Controller
 {
     public function index(Request $request)
     {
-      //if (!$request->ajax()) return redirect('/');
+      if (!$request->ajax()) return redirect('/');
 
         $buscar = $request->buscar;
         $criterio = $request->criterio;
         
         if ($buscar==''){
             $regexpedientes = Regexpediente::join('expedientes','regexpedientes.idexpediente','=','expedientes.id')
-            ->join('personas','regexpedientes.idpersona','=','personas.id')
+            ->join('personas','regexpedientes.idsolicitante','=','personas.id')
             ->join('oficinas','regexpedientes.idoficina','=','oficinas.id')
             ->select('regexpedientes.id','regexpedientes.fecha_tramite','regexpedientes.estado_tramite',
             'expedientes.codigo_expediente','personas.nombre','oficinas.unidad_organica')
@@ -26,10 +26,10 @@ class RegexpedienteController extends Controller
         }
         else{
             $regexpedientes = Regexpediente::join('expedientes','regexpedientes.idexpediente','=','expedientes.id')
-            ->join('personas','regexpedientes.idpersona','=','personas.id')
+            ->join('personas','regexpedientes.idsolicitante','=','personas.id')
             ->join('oficinas','regexpedientes.idoficina','=','oficinas.id')
             ->select('regexpedientes.id','regexpedientes.fecha_tramite','regexpedientes.estado_tramite',
-            'expedientes.codigo.expediente','personas.nombre','oficinas.unidad_organica')
+            'expedientes.codigo_expediente','personas.nombre','oficinas.unidad_organica')
             ->orderBy('regexpedientes.id', 'desc')->paginate(3)          
             ->where('regexpedientes.'.$criterio, 'like', '%'. $buscar . '%')
             ->orderBy('regexpedientes.id', 'desc')->paginate(3);
@@ -61,7 +61,7 @@ class RegexpedienteController extends Controller
 
             $regexpediente = new Regexpediente();
             $regexpediente->idexpediente = $request->idexpediente;
-            $regexpediente->idpersona = $request->idpersona;
+            $regexpediente->idsolicitante = $request->idsolicitante;
             $regexpediente->idoficina = $request->idoficina;
             $regexpediente->fecha_tramite = $mytime->toDateString();
             $regexpediente->estado_tramite ='Registrado';

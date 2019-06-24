@@ -19,7 +19,7 @@
                                    <div class="col-md-6">
                                                 <div class="input-group">
                                                     <select class="form-control col-md-3" v-model="criterio">
-                                                      <option value="idpersona">Solicitante</option>
+                                                      <option value="idsolicitante">Solicitante</option>
                                                      <option value="idexpediente">Expediente</option>
                                                       <option value="idoficina">Destino Doc</option>
                                                     </select>
@@ -104,9 +104,9 @@
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Solicitante</label>
                                     <div class="col-md-9">
-                                        <select class="form-control" v-model="idpersona">
+                                        <select class="form-control" v-model="idsolicitante">
                                                     <option value="0" disabled>Seleccione</option>
-                                                    <option v-for="persona in arrayPersona" :key="persona.id" :value="persona.id" v-text="persona.nombre"></option>
+                                                    <option v-for="persona in arraySolicitante" :key="persona.id" :value="persona.id" v-text="persona.nombre"></option>
                                        </select>   
                                         
                                     </div>
@@ -178,10 +178,10 @@
                 regexpediente_id: 0,
                 idexpediente:0,
                 idoficina : 0,
-                idpersona : 0,
+                idsolicitante : 0,
                 idexpediente : 0 ,
                 arrayRegexpediente : [],
-                arrayPersona:[],
+                arraySolicitante:[],
                 arrayOficina:[],
                 arrayExpediente: [] ,
                 modal : 0,
@@ -198,7 +198,7 @@
                     'to' : 0,
                 },
                 offset : 3,
-                criterio : 'idpersona',
+                criterio : 'idsolicitante',
                 buscar : ''
 
             }
@@ -249,13 +249,13 @@
 
 
                     
-                    selectPersona(search,loading){
+                    selectSolicitante(){
                            let me=this;
-                            var url= '/persona/selectPersona?page=';
+                            var url= '/solicitante/selectSolicitante?page=';
                             axios.get(url).then(function (response) {
                                // console.log(response);
                                 var respuesta= response.data;
-                                me.arrayPersona = respuesta.personas;
+                                me.arraySolicitante = respuesta.solicitantes;
                             })
                             .catch(function (error) {
                                 console.log(error);
@@ -263,7 +263,7 @@
 
                     },
 
-                    selectOficina(search,loading){
+                    selectOficina(){
                         let me=this;
                             var url= '/oficina/selectOficina?page=';
                             axios.get(url).then(function (response) {
@@ -277,7 +277,7 @@
                     },
                   
 
-                    selectExpediente(search,loading){
+                    selectExpediente(){
                         let me=this;
                             var url= '/expediente/selectExpediente?page=';
                             axios.get(url).then(function (response) {
@@ -307,7 +307,7 @@
                 let me = this;
 
                 axios.post('/regexpediente/registrar',{
-                    'idpersona': this.idpersona,
+                    'idsolicitante': this.idsolicitante,
                     'idoficina': this.idoficina,
                     'idexpediente' : this.idexpediente
 
@@ -325,7 +325,7 @@
             validarRegexpediente(){
                 this.errorRegexpediente=0;
                 this.errorMostrarMsjRegexpediente =[];
-                if (!this.idpersona) this.errorMostrarMsjRegexpediente.push("Seleccione el solicitante");
+                if (!this.idsolicitante) this.errorMostrarMsjRegexpediente.push("Seleccione el solicitante");
                 if (!this.idexpediente) this.errorMostrarMsjRegexpediente.push("Seleccione un expediente.");
                 if (!this.idoficina) this.errorMostrarMsjRegexpediente.push("Seleccione el destino Documento");
                 if (this.errorMostrarMsjRegexpediente.length) this.errorRegexpediente = 1;
@@ -337,9 +337,10 @@
             cerrarModal(){
                 this.modal=0;
                 this.tituloModal='';
-                 this.idpersona= 0;
+                 this.idsolicitante= 0;
                 this.idoficina = 0;
                 this.idexpediente = 0;
+                   this.errorRegexpediente=0;
             },
              desactivarRegexpediente(id){
                swal({
@@ -390,7 +391,7 @@
                             {
                                 this.modal = 1;
                               this.tituloModal = 'Registro de Expediente General';
-                              this.idpersona=0;
+                              this.idsolicitante=0;
                               this.idoficina=0;
                               this.idexpediente=0;
                               this.tipoAccion = 1;
@@ -401,7 +402,9 @@
                         }
                     }
                 }
-             
+                this.selectSolicitante();
+                   this.selectOficina();
+                      this.selectExpediente();
             }
             
         },

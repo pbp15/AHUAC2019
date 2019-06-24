@@ -17,13 +17,14 @@ class CreateRegexpedientesTable extends Migration
             $table->increments('id');
             $table->integer('idexpediente')->unsigned();
             $table->foreign('idexpediente')->references('id')->on('expedientes');
-            $table->integer('idpersona')->unsigned();
-            $table->foreign('idpersona')->references('id')->on('personas');
+            $table->integer('idsolicitante')->unsigned();
+            $table->foreign('idsolicitante')->references('id')->on('solicitantes');
             $table->integer('idoficina')->unsigned();
             $table->foreign('idoficina')->references('id')->on('oficinas');
             $table->string('estado_tramite', 20);
             $table->dateTime('fecha_tramite');
             $table->timestamps();
+
         });
     }
 

@@ -45,3 +45,9 @@ Route::post('/user/registrar','UserController@store');
 Route::put('/user/actualizar','UserController@update');
 Route::post('/user/desactivar','UserController@desactivar');
 Route::put('/user/activar','UserController@activar');
+
+
+Route::get('/solicitante', 'SolicitanteController@index');
+Route::post('/solicitante/registrar', 'SolicitanteController@store');
+Route::put('/solicitante/actualizar', 'SolicitanteController@update');
+Route::get('/solicitante/selectSolicitante', 'SolicitanteController@selectSolicitante');

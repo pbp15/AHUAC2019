@@ -50,9 +50,7 @@
                                         <button type="button" @click="abrirModal('oficina','actualizar',oficina)" class="btn btn-warning btn-sm" >
                                           <i class="icon-pencil"></i>
                                         </button> &nbsp;
-                                        <button type="button" class="btn btn-danger btn-sm" >
-                                          <i class="icon-trash"></i>
-                                        </button>
+                                  
                                     </td>                                  
                                 </tr>                               
                             </tbody>
@@ -311,6 +309,7 @@
              this.unidad_organica='';
              this.division='';
              this.responsable='';
+                this.errorOficina=0;
 
          },
          abrirModal(modelo, accion , data=[]){

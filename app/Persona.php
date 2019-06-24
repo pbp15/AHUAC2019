@@ -8,8 +8,12 @@ class Persona extends Model
 {
 
 
-    protected $fillable = ['nombre','tipo_documento','num_documento','direccion','distrito','provincia','edad','estado_civil'];
+    protected $fillable = ['nombre','tipo_documento','num_documento','direccion','telefono','email'];
 
+    public function solicitante()
+    {
+        return $this->hasOne('App\Solicitante');
+    }
 
 
  public function user(){

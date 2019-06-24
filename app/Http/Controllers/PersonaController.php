@@ -58,10 +58,8 @@ class PersonaController extends Controller
         $persona->tipo_documento = $request->tipo_documento;
         $persona->num_documento = $request->num_documento;
         $persona->direccion = $request->direccion;
-        $persona->distrito = $request->distrito;
-        $persona->provincia = $request->provincia;
-        $persona->edad = $request->edad;        
-        $persona->estado_civil = $request->estado_civil;
+        $persona->telefono = $request->telefono;
+        $persona->email = $request->email;
         $persona ->save();
 
     }
@@ -76,10 +74,8 @@ class PersonaController extends Controller
         $persona->tipo_documento = $request->tipo_documento;
         $persona->num_documento = $request->num_documento;
         $persona->direccion = $request->direccion;
-        $persona->distrito = $request->distrito;
-        $persona->provincia = $request->provincia;
-        $persona->edad = $request->edad;        
-        $persona->estado_civil = $request->estado_civil;
+        $persona->telefono = $request->telefono;
+        $persona->email = $request->email;
         $persona ->save();
     }
 

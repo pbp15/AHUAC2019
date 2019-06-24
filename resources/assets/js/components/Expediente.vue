@@ -64,9 +64,7 @@
                                         <button type="button"  @click="abrirModal('expediente','actualizar',expediente)"  class="btn btn-warning btn-sm" >
                                           <i class="icon-pencil"></i>
                                         </button> &nbsp;
-                                        <button type="button" class="btn btn-danger btn-sm" >
-                                          <i class="icon-trash"></i>
-                                        </button>
+                                     
                                     </td>
                                  
                                 </tr>
@@ -126,7 +124,7 @@
                                             <option value="PERMISO">PERMISO</option>
                                         </select>                                    
                                     </div>
-                                </div>
+                          </div>
 
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">cabecera_documento</label>
@@ -395,6 +393,7 @@
                this.nro_folio= '';
                this.prioridad = 'Urgente';
                this.fecha = '';
+               this.errorExpediente=0;
          },
             
 

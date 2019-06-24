@@ -19,10 +19,8 @@ class CreatePersonasTable extends Migration
             $table->string('tipo_documento', 20);
             $table->string('num_documento', 8);
             $table->string('direccion', 70);
-            $table->string('distrito', 70);
-            $table->string('provincia', 70);
-            $table->integer('edad')->nullable();
-            $table->string('estado_civil', 20)->nullable();
+            $table->string('telefono', 20)->nullable();
+            $table->string('email', 50)->nullable();
             $table->timestamps();
         });
     }

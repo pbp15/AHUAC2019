@@ -10,7 +10,7 @@
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-align-justify"></i> Solicitantes
+                        <i class="fa fa-align-justify"></i> Personas
                         <button type="button" @click="abrirModal('persona','registrar')"  class="btn btn-secondary" >
                             <i class="icon-plus"></i>&nbsp;Nuevo
                         </button>
@@ -20,8 +20,11 @@
                             <div class="col-md-6">
                                 <div class="input-group">
                                     <select class="form-control col-md-3" v-model="criterio">
+                                       <option value="nombre">Nombre</option>
                                       <option value="num_documento">Nº Doc</option>
-                                      <option value="nombre">Nombre</option>
+                                       <option value="email">Email</option>
+                                    <option value="telefono">Teléfono</option>
+
                                     </select>
                                     <input type="text" v-model="buscar" @keyup.enter="listarPersona(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
                                     <button type="submit" @click=" listarPersona(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
@@ -38,13 +41,11 @@
                                 <tr>
                                  
                                     <th>Nombre</th>
-                                    <th>tipo_documento</th>
-                                    <th>num_documento</th>
-                                    <th>direccion</th>
-                                    <th> distrito</th>
-                                    <th>provincia</th>
-                                    <th>edad</th>
-                                    <th>estado_civil</th>
+                                    <th>Tipo documento</th>
+                                    <th>Numero Doc</th>
+                                    <th>Direccion</th>
+                                    <th> Telefono</th>
+                                    <th>Email</th>
                                      <th>Opciones</th>
                                 </tr>
                             </thead>
@@ -58,17 +59,13 @@
                                   <td v-text="persona.tipo_documento"></td>
                                   <td v-text="persona.num_documento"></td>
                                   <td v-text="persona.direccion"></td>
-                                  <td v-text="persona.distrito"></td>
-                                  <td v-text="persona.provincia"></td>
-                                  <td v-text="persona.edad"></td>
-                                  <td v-text="persona.estado_civil"></td>         
+                                  <td v-text="persona.telefono"></td>
+                                  <td v-text="persona.email"></td>       
                                      <td>
                                         <button type="button" @click="abrirModal('persona','actualizar',persona)"  class="btn btn-warning btn-sm" >
                                           <i class="icon-pencil"></i>
                                         </button> &nbsp;
-                                        <button type="button" class="btn btn-danger btn-sm">
-                                          <i class="icon-trash"></i>
-                                        </button>
+                                     
                                     </td>                                             
                                                                       
                                 </tr>
@@ -149,41 +146,19 @@
                                 </div>
 
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">distrito</label>
+                                    <label class="col-md-3 form-control-label" for="email-input">Teléfono</label>
                                     <div class="col-md-9">
-                                        <input type="text"   v-model="distrito"  class="form-control" placeholder="Nombre Distrito">
-                                        
+                                        <input type="text" v-model="telefono" class="form-control" placeholder="Teléfono">
                                     </div>
                                 </div>
-
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">provincia</label>
+                                    <label class="col-md-3 form-control-label" for="email-input">Email</label>
                                     <div class="col-md-9">
-                                        <input type="text"  v-model="provincia"  class="form-control" placeholder="Nombre Provincia">
-                                        
+                                        <input type="email" v-model="email" class="form-control" placeholder="Email">
                                     </div>
-                                </div>
+                                </div>             
 
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">edad </label>
-                                    <div class="col-md-9">
-                                        <input type="text"   v-model="edad"  class="form-control" placeholder="¿cual es tu edad?">
-                                        
-                                    </div>
-                                </div>
-
-                              
-                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Estado Civil</label>
-                                    <div class="col-md-9">
-                                        <select v-model="estado_civil" class="form-control">
-                                            <option value="SOLTERO">SOLTERO(A)</option>
-                                            <option value="CASADO">CASADO(A)</option>
-                                            <option value="DIVORCIADO">DIVORCIADO(A)</option>
-                                           <option value="VIUDO">VIUDO(A)</option>
-                                        </select>                                    
-                                    </div>
-                                </div>
+                                                       
 
 
                                 
@@ -245,10 +220,8 @@
              tipo_documento : 'DNI' ,
               num_documento: '',
                 direccion: '',
-                distrito: '',
-                provincia: '',
-                edad : '',
-                estado_civil : 'SOLTERO(A)',
+                telefono : '',
+                email : '',
                 arrayPersona : [],
                      modal : 0,
                      tituloModal : '',
@@ -329,19 +302,15 @@
             registrarPersona(){
                 if (this.validarPersona()){
                                 return;
-                            }
-
-
+                            }                           
                  let me = this;
                 axios.post('/persona/registrar',{
                     'nombre' : this.nombre ,
                     'tipo_documento' : this.tipo_documento,
                     'num_documento' : this.num_documento,
                      'direccion' : this.direccion,
-                     'distrito' : this.distrito,
-                     'provincia' : this.provincia,
-                     'edad'  : this.edad,
-                     'estado_civil' : this.estado_civil
+                     ' telefono ' : this. telefono ,
+                     ' email ' : this. email 
 
                 }).then(function (response) { //obtener los valores del /ofcina
                     me.cerrarModal();
@@ -365,10 +334,8 @@
                     'tipo_documento' : this.tipo_documento,
                     'num_documento' : this.num_documento,
                      'direccion' : this.direccion,
-                     'distrito' : this.distrito,
-                     'provincia' : this.provincia,
-                     'edad'  : this.edad,
-                     'estado_civil' : this.estado_civil,
+                     'telefono' : this.telefono,
+                     'email' : this.email ,
                      'id' : this.persona_id
 
                 }).then(function (response) { //obtener los valores del /ofcina
@@ -387,11 +354,8 @@
                 this.errorMostrarMsjPersona=[];
                 
                 if(!this.nombre) this.errorMostrarMsjPersona.push("El Nombre no puede estar vacio");
-                if(!this.tipo_documento) this.errorMostrarMsjPersona.push("El Tipo de Documento no puede estar vacio");
                 if(!this.num_documento) this.errorMostrarMsjPersona.push("El Numero de Documento no puede estar vacio");
-                if(!this.direccion) this.errorMostrarMsjPersona.push("La direccion no puede estar vacio");
-                if(!this.distrito) this.errorMostrarMsjPersona.push("La distrito no puede estar vacio");
-                if(!this.provincia) this.errorMostrarMsjPersona.push("La Provincia no puede estar vacio");
+ 
                         
                   if(this.errorMostrarMsjPersona.length) this.errorPersona = 1;
 
@@ -408,10 +372,10 @@
              this.tipo_documento = 'DNI';
              this.num_documento = '';
              this.direccion = '';
-             this.distrito= '';
-             this.provincia = '';
-             this.edad = '';
-             this.estado_civil = 'SOLTERO(A)';
+             this.telefono= '';
+             this.email = '';
+              this.errorPersona=0;
+
          },
 
             abrirModal(modelo,accion,data = []){
@@ -427,10 +391,8 @@
                               this.tipo_documento = 'DNI';
                               this.num_documento = '';
                               this.direccion = '';
-                              this.distrito= '';
-                              this.provincia = '';
-                              this.edad = '';
-                              this.estado_civil = 'SOLTERO(A)';
+                              this.telefono ='';
+                              this.email= '';
                               this.tipoAccion = 1;
                               break;
 
@@ -445,10 +407,8 @@
                               this.tipo_documento = data['tipo_documento'];
                               this.num_documento = data['num_documento'];
                               this.direccion = data['direccion'];
-                              this.distrito= data['distrito'];
-                              this.provincia = data['provincia'];
-                              this.edad = data['edad'];
-                              this.estado_civil = data['estado_civil'];
+                              this.telefono= data['telefono'];
+                              this.email = data['email'];
                               break;
 
                             }

@@ -18,6 +18,7 @@ window.Vue = require('vue');
 Vue.component('oficina', require('./components/Oficina.vue'));
 Vue.component('expediente', require('./components/Expediente.vue'));
 Vue.component('persona', require('./components/Persona.vue'));
+Vue.component('solicitante', require('./components/Solicitante.vue'));
 Vue.component('regexpediente', require('./components/Regexpediente.vue'));
 Vue.component('rol', require('./components/Rol.vue'));
 Vue.component('user', require('./components/User.vue'));
