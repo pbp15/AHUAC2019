@@ -56,11 +56,11 @@
         clear: left;
         }
 
-        #cliente{
+        #solicitante{
         text-align: left;
         }
 
-        #facliente{
+        #fasolicitante{
         width: 40%;
         border-collapse: collapse;
         border-spacing: 0;
@@ -72,35 +72,35 @@
         font-size: 15px;
         }
 
-        #facliente thead{
+        #fasolicitante thead{
         padding: 20px;
         background: #2183E3;
         text-align: left;
         border-bottom: 1px solid #FFFFFF;  
         }
 
-        #facvendedor{
+        #facoficina{
         width: 100%;
         border-collapse: collapse;
         border-spacing: 0;
         margin-bottom: 15px;
         }
 
-        #facvendedor thead{
+        #facoficina thead{
         padding: 20px;
         background: #2183E3;
         text-align: center;
         border-bottom: 1px solid #FFFFFF;  
         }
 
-        #facarticulo{
+        #facexpediente{
         width: 100%;
         border-collapse: collapse;
         border-spacing: 0;
         margin-bottom: 15px;
         }
 
-        #facarticulo thead{
+        #facexpediente thead{
         padding: 20px;
         background: #2183E3;
         text-align: center;
@@ -143,6 +143,8 @@
                             <td><p id="solicitante">Sr(a). {{$r->nombre}}<br>
                             {{$r->tipo_documento}}: {{$r->num_documento}}<br>
                             Dirección: {{$r->direccion}}<br> 
+                            Edad: {{$r->edad}}<br> 
+                            Estado Civil: {{$r->estado_civil}}<br> 
                             </p></td>              
 
                         </tr>
@@ -160,13 +162,13 @@
                 <table id="facoficina">
                     <thead>
                         <tr id="fv">
-                            <th>DESTINO DOC</th>                      
+                            <th>DESTINO DOCUMENTO</th>                      
                             <th>RESPONSABLE</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{{$r->unidad_organica}} :{{$r->division}}</td>
+                            <td>{{$r->unidad_organica}} / {{$r->division}}</td>
                             <td>{{$r->responsable}}</td>
                         </tr>
                     </tbody>
@@ -182,7 +184,7 @@
             <div>
                 <table id="facexpediente">
                     <thead>
-                        <tr id="fv">
+                        <tr id="fa">
                             <th>CODIGO</th>
                             <th>ASUNTO</th>
                             <th>PRIORIDAD</th>
@@ -202,7 +204,16 @@
          
         </section>      
         
-        @endforeach  
+        @endforeach 
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br> 
 
 
         <footer>

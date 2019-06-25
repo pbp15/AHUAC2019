@@ -82,11 +82,12 @@ class RegexpedienteController extends Controller
     
         $regexpediente = Regexpediente::join('expedientes','regexpedientes.idexpediente','=','expedientes.id')
         ->join('personas','regexpedientes.idsolicitante','=','personas.id')
+        ->join('solicitantes','regexpedientes.idsolicitante','=','solicitantes.id')
         ->join('oficinas','regexpedientes.idoficina','=','oficinas.id')
         ->select('regexpedientes.id','regexpedientes.fecha_tramite','regexpedientes.estado_tramite',
         'expedientes.codigo_expediente','expedientes.asunto_tramite','expedientes.prioridad',
         'expedientes.observaciones','personas.nombre','personas.tipo_documento',
-        'personas.num_documento','oficinas.unidad_organica','oficinas.division','oficinas.responsable')
+        'personas.num_documento','personas.direccion','solicitantes.edad','solicitantes.estado_civil','oficinas.unidad_organica','oficinas.division','oficinas.responsable')
         ->where('regexpedientes.id','=',$id)
         ->orderBy('regexpedientes.id', 'desc')->take(1)->get();
 
