@@ -14,6 +14,9 @@
                         <button type="button" @click="abrirModal('expediente','registrar')" class="btn btn-secondary" >
                             <i class="icon-plus"></i>&nbsp;Nuevo
                         </button>
+                         <button type="button" @click="cargarPdf()" class="btn btn-info" >
+                            <i class="icon-doc"></i>&nbsp;Reporte
+                        </button>
                     </div>
                     <div class="card-body">
                         <div class="form-group row">
@@ -307,6 +310,11 @@
                  //actualiza la pagina actula
                  me.pagination.current_page = page;
                  me.listarExpediente(page,buscar,criterio);
+            },
+
+            cargarPdf(){
+                window.open('http://127.0.0.1:8000/expediente/listarPdf','_blank');
+
             },
                 
             registrarExpediente(){

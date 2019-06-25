@@ -23,18 +23,21 @@
               </div>
               <div class="row">
                 <div class="col-6">
-                  <button type="submit" class="btn btn-primary px-4">Acceder</button>
+                  <button type="submit" class="btn btn-secondary px-4">Acceder</button>
                 </div>
               </div>
             </div>
           </form>
           </div>
-          <div class="card text-white bg-danger py-5 d-md-down-none" style="width:44%">
+          <div class="card text-white bg-success py-5 d-md-down-none" style="width:44%">
             <div class="card-body text-center">
               <div>
                 <h2>Muncipalidad Distrital de Ahuac</h2>
-                <p>Sistema de Tramite Documentario de Mesa de Partes</p>
-                <a href="https://www.udemy.com/user/juan-carlos-arcila-diaz/" target="_blank" class="btn btn-success active mt-3">Gestion Municipal 2019</a>
+                <br>
+                <h3>Sistema de Tramite Documentario de Mesa de Partes</h3>
+                <br>
+                <h4>Gestion 2018-2022</h4>
+                
               </div>
             </div>
           </div>

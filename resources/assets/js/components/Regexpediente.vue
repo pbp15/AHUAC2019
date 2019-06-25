@@ -52,7 +52,10 @@
                                                         <td v-text="regexpediente.fecha_tramite"></td>
                                                         <td v-text="regexpediente.estado_tramite"></td> 
                                                         <td>
-                                                            
+                                                              <button type="button" class="btn btn-info btn-sm" @click="pdfRegexpediente(regexpediente.id)">
+                                                                    <i class="icon-doc"></i>
+                                                                </button>&nbsp;
+
                                                               <template v-if="regexpediente.estado_tramite=='Registrado'">
                                                                 <button type="button" class="btn btn-danger btn-sm" @click="desactivarRegexpediente(regexpediente.id)">
                                                                     <i class="icon-trash"></i>
@@ -288,8 +291,13 @@
                             .catch(function (error) {
                                 console.log(error);
                             });
-                    },          
-     
+                    },   
+
+                    
+                           
+             pdfRegexpediente(id){
+                  window.open('http://127.0.0.1:8000/regexpediente/pdf/'+ id + ',' + '_blank');
+             },
 
             cambiarPagina(page,buscar,criterio){
                 let me = this;

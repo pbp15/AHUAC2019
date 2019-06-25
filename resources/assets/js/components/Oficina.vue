@@ -99,11 +99,16 @@
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">División</label>
-                                    <div class="col-md-9">
-                                        <input type="text" v-model="division" class="form-control" placeholder="Nombre de la division">
+                                    <div class="col-md-9">                                
+                                        <select v-model="division" class="form-control">
+                                            <option value="ARCHIVOS">ARCHIVOS</option>
+                                            <option value="SUBGERENCIA">SUBGERENCIA</option>
+                                          <option value="N.A">-</option>
+                                        </select>  
                                       
                                     </div>
                                 </div>
+
 
                                   <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Responsable</label>
@@ -171,7 +176,7 @@
             return{
                 oficina_id: 0,
                 unidad_organica :'',
-                division : '' ,
+                division : 'ARCHIVOS' ,
                 responsable: '',
                 arrayOficina : [], //almacene todos los datos
                 modal : 0, //esto es para ocultar o mostrar nuestra ventana modal

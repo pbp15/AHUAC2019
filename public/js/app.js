@@ -31961,13 +31961,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
             oficina_id: 0,
             unidad_organica: '',
-            division: '',
+            division: 'ARCHIVOS',
             responsable: '',
             arrayOficina: [], //almacene todos los datos
             modal: 0, //esto es para ocultar o mostrar nuestra ventana modal
@@ -32518,30 +32523,48 @@ var render = function() {
                       ),
                       _vm._v(" "),
                       _c("div", { staticClass: "col-md-9" }, [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.division,
-                              expression: "division"
-                            }
-                          ],
-                          staticClass: "form-control",
-                          attrs: {
-                            type: "text",
-                            placeholder: "Nombre de la division"
-                          },
-                          domProps: { value: _vm.division },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
+                        _c(
+                          "select",
+                          {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.division,
+                                expression: "division"
                               }
-                              _vm.division = $event.target.value
+                            ],
+                            staticClass: "form-control",
+                            on: {
+                              change: function($event) {
+                                var $$selectedVal = Array.prototype.filter
+                                  .call($event.target.options, function(o) {
+                                    return o.selected
+                                  })
+                                  .map(function(o) {
+                                    var val = "_value" in o ? o._value : o.value
+                                    return val
+                                  })
+                                _vm.division = $event.target.multiple
+                                  ? $$selectedVal
+                                  : $$selectedVal[0]
+                              }
                             }
-                          }
-                        })
+                          },
+                          [
+                            _c("option", { attrs: { value: "ARCHIVOS" } }, [
+                              _vm._v("ARCHIVOS")
+                            ]),
+                            _vm._v(" "),
+                            _c("option", { attrs: { value: "SUBGERENCIA" } }, [
+                              _vm._v("SUBGERENCIA")
+                            ]),
+                            _vm._v(" "),
+                            _c("option", { attrs: { value: "N.A" } }, [
+                              _vm._v("-")
+                            ])
+                          ]
+                        )
                       ])
                     ]),
                     _vm._v(" "),
@@ -33105,6 +33128,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -33192,6 +33218,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             //actualiza la pagina actula
             me.pagination.current_page = page;
             me.listarExpediente(page, buscar, criterio);
+        },
+        cargarPdf: function cargarPdf() {
+            window.open('http://127.0.0.1:8000/expediente/listarPdf', '_blank');
         },
         registrarExpediente: function registrarExpediente() {
 
@@ -33347,6 +33376,23 @@ var render = function() {
             [
               _c("i", { staticClass: "icon-plus" }),
               _vm._v(" Nuevo\n                ")
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-info",
+              attrs: { type: "button" },
+              on: {
+                click: function($event) {
+                  return _vm.cargarPdf()
+                }
+              }
+            },
+            [
+              _c("i", { staticClass: "icon-doc" }),
+              _vm._v(" Reporte\n                ")
             ]
           )
         ]),
@@ -36961,6 +37007,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -37055,6 +37104,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             }).catch(function (error) {
                 console.log(error);
             });
+        },
+        pdfRegexpediente: function pdfRegexpediente(id) {
+            window.open('http://127.0.0.1:8000/regexpediente/pdf/' + id + ',' + '_blank');
         },
         cambiarPagina: function cambiarPagina(page, buscar, criterio) {
             var me = this;
@@ -37341,6 +37393,22 @@ var render = function() {
                     _c(
                       "td",
                       [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-info btn-sm",
+                            attrs: { type: "button" },
+                            on: {
+                              click: function($event) {
+                                return _vm.pdfRegexpediente(regexpediente.id)
+                              }
+                            }
+                          },
+                          [_c("i", { staticClass: "icon-doc" })]
+                        ),
+                        _vm._v(
+                          " \n\n                                                          "
+                        ),
                         regexpediente.estado_tramite == "Registrado"
                           ? [
                               _c(

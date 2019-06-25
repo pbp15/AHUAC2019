@@ -1,15 +1,5 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 
 Route::group(['middleware'=>['guest']],function(){
     Route::get('/','Auth\LoginController@showLoginForm');
@@ -38,10 +28,13 @@ Route::group(['middleware'=>['auth']],function(){
         Route::post('/expediente/registrar','ExpedienteController@store');
         Route::put('/expediente/actualizar','ExpedienteController@update');
         Route::get('/expediente/selectExpediente','ExpedienteController@selectExpediente');
+        Route::get('/expediente/listarPdf','ExpedienteController@listarPdf')->name('expedientes_pdf');
 
         Route::get('/regexpediente','RegexpedienteController@index');
         Route::post('/regexpediente/registrar','RegexpedienteController@store');
         Route::put('/regexpediente/desactivar','RegexpedienteController@desactivar');
+        Route::get('/regexpediente/pdf/{id}','RegexpedienteController@pdf')->name('regexpediente_pdf');
+
 
         Route::get('/persona','PersonaController@index');
         Route::post('/persona/registrar','PersonaController@store');
@@ -68,12 +61,14 @@ Route::group(['middleware'=>['auth']],function(){
         Route::post('/expediente/registrar','ExpedienteController@store');
         Route::put('/expediente/actualizar','ExpedienteController@update');
         Route::get('/expediente/selectExpediente','ExpedienteController@selectExpediente');
-        
-        
+        Route::get('/expediente/listarPdf','ExpedienteController@listarPdf')->name('expedientes_pdf');
+                
+
+
         Route::get('/regexpediente','RegexpedienteController@index');
         Route::post('/regexpediente/registrar','RegexpedienteController@store');
         Route::put('/regexpediente/desactivar','RegexpedienteController@desactivar');
-        
+        Route::get('/regexpediente/pdf/{id}','RegexpedienteController@pdf')->name('registroExpedientes_pdf');
         
         Route::get('/persona','PersonaController@index');
         Route::post('/persona/registrar','PersonaController@store');

@@ -50,6 +50,19 @@ class ExpedienteController extends Controller
  
      }
 
+
+    public function listarPdf(){
+
+        $expedientes = Expediente::orderBy('id', 'desc')->get();
+        
+        $cont= Expediente::count();
+
+
+        $pdf = \PDF::loadView('pdf.expedientespdf',['expedientes'=>$expedientes,'cont'=>$cont]);
+        return $pdf->download('expedientes.pdf');
+    }
+
+
     public function store(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
