@@ -8,10 +8,7 @@
                 <!-- Ejemplo de tabla Listado -->
             <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-align-justify"></i> Registro de Expedientes
-                        <button type="button"  @click="mostrarDetalle()" class="btn btn-secondary">
-                            <i class="icon-plus"></i>&nbsp;Nuevo
-                        </button>
+                        <i class="fa fa-align-justify"></i> Registro de Expedientes                      
                     </div>
                     <!-- INICIO tabla Listado de registro de expedientes -->
                          <!-- Listado-->
@@ -23,7 +20,6 @@
                                                             <select class="form-control col-md-3" v-model="criterio">
                                                             <option value="idsolicitante">Solicitante</option>
                                                             <option value="idexpediente">Expediente</option>
-                                                            <option value="idoficina">Destino Doc</option>
                                                             </select>
                                                             <input type="text" v-model="buscar" @keyup.enter="listarRegexpediente(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
                                                             <button type="submit" @click="listarRegexpediente(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
@@ -88,112 +84,9 @@
 
                                                 
                                     </div>  
-                 </template>                            
+                 </template>                           
             
                   
-                      <!--FIN  tabla Listado de registro de expedientes -->                         
-                    <!--  INICIO DESARROLLO DEL registro de expedientes
-                     -- label es como el model q jala los datos con el atributo correcto
-                         que escojistes                  
-                    
-                     -->
-         <template v-if="listado==0"> 
-               
-                <div class="card-body">      
-
-
-                 <div class="form-group row border">   
-                                                    
-                            <button type="button" class="btn btn-danger btn-sm col-md-3" >                           
-                            <i class="fa fa-desktop fa-3x fa-lg" style="color:#FFFFFF;"> </i>
-                            </button>   
-                                    
-                                  
-                              <div class="col-md-7 alert alert-light">
-                                    <v-select
-                                        @search="selectOficina"
-                                        label="unidad_organica"
-                                        :options="arrayOficina"
-                                        placeholder="Buscar Oficina..."
-                                        @input="getDatosOficina"                                        
-                                    >
-
-                                    </v-select>
-                              </div>                               
-                       </div>                
-
-                  <div class="form-group row border">   
-                            
-                             <button type="button" class="btn btn-danger btn-sm col-md-3"  >                           
-                                      <i class="fa fa-user fa-3x fa-lg" style="color:#FFFFFF;"> </i>
-                            </button> 
-                          
-
-                             <div class="col-md-7  alert alert-light">
-                                    <v-select
-                                        @search="selectSolicitante"
-                                        label="nombre" 
-                                        :options="arraySolicitante"
-                                        placeholder="Buscar Solicitantes..."
-                                        @input="getDatosSolicitante"                                        
-                                    >
-
-                                    </v-select>
-                             </div>                     
-                                          
-                    </div>    
-                                                  
-          
-                  <div class="form-group row border">   
-                             
-                                  <button type="button" class="btn btn-danger btn-sm col-md-3" >                           
-                                      <i class="fa fa-folder fa-3x fa-lg" style="color:#FFFFFF;"> </i>
-                                      </button>
-                                                                 
-                   
-                                 <div class="col-md-7 alert alert-light">
-                                    <v-select
-                                        @search="selectExpediente"
-                                        label="asunto_tramite"
-                                        :options="arrayExpediente"
-                                        placeholder="Buscar Expediente..."
-                                        @input="getDatosExpediente"                                        
-                                    >
-
-                                    </v-select>
-                                </div>                                 
-                       
-                     </div>                     
-
-                    <div class="form-group row ">                                         
-                               
-                          <div class="col-md-12">
-                                  <div v-show="errorRegexpediente" class="form-group row div-error">
-                                                    <div class="text-center text-error">
-                                                         <div v-for="error in errorMostrarMsjRegexpediente" :key="error" v-text="error">
-
-                                                        </div>
-                                                    </div>
-                                           </div>                            
-
-                             </div>                        
-                     </div>
-                          <div class="form-group row ">  
-                                 <div class="col-md-12">&nbsp;&nbsp;&nbsp;
-                                         <button type="button" @click="ocultarDetalle()" class="btn btn-secondary">Cerrar</button> &nbsp;&nbsp;
-                                          <button type="button" class="btn btn-danger" @click="registrarRegexpediente()">Registrar Expediente</button>
-                                    </div>
-                         
-               
-
-             
-                        </div>
-                 
-                       </div>
-                     </template>   
-                    <!--  FIN DESARROLLO DEL registro de expedientes -->
-
-                <!-- Ver expediente -->
                     <template v-else-if="listado==2">
                     <div class="card-body">
                         <div class="form-group row border">
@@ -352,90 +245,25 @@
         methods : {
             listarRegexpediente (page,buscar,criterio){
                 let me=this;
-                var url= '/regexpediente?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio;
+                var url= '/regexpediente/selectOficinaRecursos?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio;
                 axios.get(url).then(function (response) {
-                    var respuesta= response.data;
+                   var respuesta= response.data;
                     me.arrayRegexpediente = respuesta.regexpedientes.data;
                     me.pagination= respuesta.pagination;
+                  
                 })
+               
                 .catch(function (error) {
                     console.log(error);
                 });
-            },
-
-
-
-              selectSolicitante(search,loading){
-                let me=this;
-                loading(true)
-
-                var url= '/solicitante/selectSolicitante?filtro='+search;
-                axios.get(url).then(function (response) {
-                    let respuesta = response.data;
-                    q: search
-                    me.arraySolicitante=respuesta.solicitantes;
-                    loading(false)
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-            },
-            getDatosSolicitante(val1){
-                let me = this;
-                me.loading = true;
-                me.idsolicitante = val1.id;
-            },
-
-
-
-            selectOficina(search,loading){
-                let me=this;
-                loading(true)
-
-                var url= '/oficina/selectOficina?filtro='+search;
-                axios.get(url).then(function (response) {
-                    let respuesta = response.data;
-                    q: search
-                    me.arrayOficina=respuesta.oficinas;
-                    loading(false)
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-            },
-            getDatosOficina(val2){
-                let me = this;
-                me.loading = true;
-                me.idoficina = val2.id;
-            },
-
-
-            
-            selectExpediente(search,loading){
-                let me=this;
-                loading(true)
-
-                var url= '/expediente/selectExpediente?filtro='+search;
-                axios.get(url).then(function (response) {
-                    let respuesta = response.data;
-                    q: search
-                    me.arrayExpediente=respuesta.expedientes;
-                    loading(false)
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-            },
-            getDatosExpediente(val3){
-                let me = this;
-                me.loading = true;
-                me.idexpediente = val3.id;
-            },
+            },            
                     
                            
              pdfRegexpediente(id){
                   window.open('http://127.0.0.1:8000/regexpediente/pdf/'+ id + ',' + '_blank');
              },
+
+             
 
             cambiarPagina(page,buscar,criterio){
                 let me = this;
@@ -445,42 +273,6 @@
                 me.listarRegexpediente(page,buscar,criterio);
             },
 
-            registrarRegexpediente(){
-                if (this.validarRegexpediente()){
-                    return;
-                }
-                
-                let me = this;
-
-                axios.post('/regexpediente/registrar',{
-                    'idsolicitante': this.idsolicitante,
-                    'idoficina': this.idoficina,
-                    'idexpediente' : this.idexpediente
-
-                }).then(function (response) {
-                    me.listado=1;
-                    me.listarRegexpediente(1,'','idpersona');
-                    me.idoficina=0;
-                    me.idexpediente=0;
-                    me.idsolicitante=0;                    
-                }).catch(function (error) {
-                    console.log(error);
-                });
-
-            },
-
-
-           
-            validarRegexpediente(){
-                this.errorRegexpediente=0;
-                this.errorMostrarMsjRegexpediente =[];
-                if (!this.idsolicitante) this.errorMostrarMsjRegexpediente.push("Seleccione el solicitante");
-                if (!this.idexpediente) this.errorMostrarMsjRegexpediente.push("Seleccione un expediente.");
-                if (!this.idoficina) this.errorMostrarMsjRegexpediente.push("Seleccione el destino Documento");
-                if (this.errorMostrarMsjRegexpediente.length) this.errorRegexpediente = 1;
-
-                return this.errorRegexpediente;
-            },
                 verRegexpediente(id){
                 let me=this;
                 me.listado=2;
@@ -522,54 +314,6 @@
             ocultarDetalle(){
                 this.listado=1;
             },
-      
-             desactivarRegexpediente(id){
-               swal({
-                title: 'Esta seguro de anular este registro?',
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Aceptar!',
-                cancelButtonText: 'Cancelar',
-                confirmButtonClass: 'btn btn-success',
-                cancelButtonClass: 'btn btn-danger',
-                buttonsStyling: false,
-                reverseButtons: true
-                }).then((result) => {
-                if (result.value) {
-                    let me = this;
-
-                    axios.put('/regexpediente/desactivar',{
-                        'id': id
-                    }).then(function (response) {
-                        me.listarRegexpediente(1,'','idpersona');
-                        swal(
-                        'Anulado!',
-                        'El registro ha sido anulado con éxito.',
-                        'success'
-                        )
-                    }).catch(function (error) {
-                        console.log(error);
-                    });
-                    
-                    
-                } else if (
-                    // Read more about handling dismissals
-                    result.dismiss === swal.DismissReason.cancel
-                ) {
-                    
-                }
-                }) 
-            },
-             cerrarModal(){
-                this.modal=0;
-                this.tituloModal='';
-            }, 
-            abrirModal(){             
-                this.modal = 1;
-                this.tituloModal = 'Registre los datos ';
-            }
         },
      
         

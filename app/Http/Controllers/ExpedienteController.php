@@ -42,8 +42,9 @@ class ExpedienteController extends Controller
         if (!$request->ajax()) return redirect('/');
  
          $filtro = $request->filtro;     
-         $expedientes = Expediente::where('codigo_expediente', 'like', '%'. $filtro . '%')
-         ->select('id','codigo_expediente')
+         $expedientes = Expediente::where('asunto_tramite', 'like', '%'. $filtro . '%')
+         ->orWhere('codigo_expediente', 'like', '%'. $filtro . '%')
+         ->select('id','asunto_tramite','codigo_expediente')
          ->orderBy('codigo_expediente', 'asc')->get();
  
          return ['expedientes' => $expedientes];

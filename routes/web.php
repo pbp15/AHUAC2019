@@ -32,9 +32,9 @@ Route::group(['middleware'=>['auth']],function(){
 
         Route::get('/regexpediente','RegexpedienteController@index');
         Route::post('/regexpediente/registrar','RegexpedienteController@store');
-        Route::put('/regexpediente/desactivar','RegexpedienteController@desactivar');
+        Route::put('/regexpediente/desactivar','RegexpedienteController@desactivar'); 
         Route::get('/regexpediente/pdf/{id}','RegexpedienteController@pdf')->name('regexpediente_pdf');
-
+        Route::get('/regexpediente/obtenerVista','RegexpedienteController@obtenerVista');
 
         Route::get('/persona','PersonaController@index');
         Route::post('/persona/registrar','PersonaController@store');
@@ -56,6 +56,7 @@ Route::group(['middleware'=>['auth']],function(){
         Route::post('/oficina/registrar','OficinaController@store');
         Route::put('/oficina/actualizar','OficinaController@update');
         Route::get('/oficina/selectOficina','OficinaController@selectOficina');
+        Route::get('/oficina/eliminar','OficinaController@destroy');
         
         Route::get('/expediente','ExpedienteController@index');
         Route::post('/expediente/registrar','ExpedienteController@store');
@@ -95,6 +96,14 @@ Route::group(['middleware'=>['auth']],function(){
 
     });
 
+    Route::group(['middleware'=>['RecursosHumanos']],function(){
+
+        Route::get('/regexpediente','RegexpedienteController@index');
+        Route::get('/regexpediente/selectOficinaRecursos','RegexpedienteController@selectOficinaRecursos');
+        Route::get('/regexpediente/pdf/{id}','RegexpedienteController@pdf')->name('registroExpedientes_pdf');
+        
+
+    });
 
 });
 

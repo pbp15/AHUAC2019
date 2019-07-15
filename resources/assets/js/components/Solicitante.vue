@@ -78,7 +78,7 @@
             </div>
             <!--Inicio del modal agregar/actualizar-->
             <div class="modal fade" tabindex="-1" :class="{'mostrar' : modal}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
-                <div class="modal-dialog modal-primary modal-lg" role="document">
+                <div class="modal-dialog modal-info modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h4 class="modal-title" v-text="tituloModal"></h4>
@@ -89,13 +89,13 @@
                         <div class="modal-body">
                             <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Nombre (*)</label>
+                                    <label class="col-md-3 form-control-label  h6 font-weight-bold text-light bg-info text-center" for="text-input">Nombre </label>
                                     <div class="col-md-9">
                                         <input type="text" v-model="nombre" class="form-control" placeholder="Nombre de la persona">                                        
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Tipo Documento</label>
+                                    <label class="col-md-3 form-control-label h6 font-weight-bold text-light bg-info text-center" for="text-input">Tipo Documento</label>
                                     <div class="col-md-9">
                                         <select v-model="tipo_documento" class="form-control">
                                             <option value="DNI">DNI</option>
@@ -104,31 +104,31 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Número</label>
+                                    <label class="col-md-3 form-control-label h6 font-weight-bold text-light bg-info text-center" for="text-input">Número</label>
                                     <div class="col-md-9">
                                         <input type="text" v-model="num_documento" class="form-control" placeholder="Número de documento">                                        
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="email-input">Dirección</label>
+                                    <label class="col-md-3 form-control-label h6 font-weight-bold text-light bg-info text-center" for="email-input">Dirección</label>
                                     <div class="col-md-9">
                                         <input type="text" v-model="direccion" class="form-control" placeholder="Dirección">
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="email-input">Procedencia</label>
+                                    <label class="col-md-3 form-control-label h6 font-weight-bold text-light bg-info text-center" for="email-input">Procedencia</label>
                                     <div class="col-md-9">
                                         <input type="text" v-model="procedencia" class="form-control" placeholder="Procedencia">
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="email-input">Edad</label>
+                                    <label class="col-md-3 form-control-label h6 font-weight-bold text-light bg-info text-center" for="email-input">Edad</label>
                                     <div class="col-md-9">
                                         <input type="email" v-model="edad" class="form-control" placeholder="Edad">
                                     </div>
                                 </div>
                               <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Estado Civil</label>
+                                    <label class="col-md-3 form-control-label h6 font-weight-bold text-light bg-info text-center" for="text-input">Estado Civil</label>
                                     <div class="col-md-9">
                                         <select v-model="estado_civil" class="form-control">
                                             <option value="SOLTERO">SOLTERO(A)</option>
@@ -151,9 +151,9 @@
                             </form>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
-                            <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarPersona()">Guardar</button>
-                            <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarPersona()">Actualizar</button>
+                            <button type="button" class="btn btn-danger" @click="cerrarModal()">Cerrar</button>
+                            <button type="button" v-if="tipoAccion==1" class="btn btn-info" @click="registrarPersona()">Guardar</button>
+                            <button type="button" v-if="tipoAccion==2" class="btn btn-info" @click="actualizarPersona()">Actualizar</button>
                         </div>
                     </div>
                     <!-- /.modal-content -->

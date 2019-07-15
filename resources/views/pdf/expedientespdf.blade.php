@@ -90,7 +90,6 @@
                 <tr>
                 <th>Codigo</th>
                   <th>Tipo documento</th>
-                   <th>Cabecera Documento</th>
                    <th>Asunto Tramite</th>
                    <th>Nro folio</th>
                   <th>Prioridad</th>
@@ -103,7 +102,6 @@
                 <tr>
                         <td>{{$e->codigo_expediente}}</td>
                         <td>{{$e->tipo_documento}}</td>
-                        <td>{{$e->cabecera_documento}}</td>
                         <td>{{$e->asunto_tramite}}</td>
                         <td>{{$e->nro_folio}}</td>
                         <td>{{$e->prioridad}}</td>

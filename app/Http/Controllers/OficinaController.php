@@ -51,12 +51,13 @@ class OficinaController extends Controller
      }
 
 
+
+
     public function store(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
         $oficina = new Oficina();
         $oficina ->unidad_organica = $request->unidad_organica;
-        $oficina ->division = $request->division;
         $oficina ->responsable = $request->responsable;
         $oficina ->save();
 
@@ -71,10 +72,22 @@ class OficinaController extends Controller
         if (!$request->ajax()) return redirect('/');
         $oficina = Oficina::findOrFail($request->id);
         $oficina ->unidad_organica = $request->unidad_organica;
-        $oficina ->division = $request->division;
         $oficina ->responsable = $request->responsable;
         $oficina ->save();
     }
+
+    public function destroy( $id)
+    {
+
+        if (!$request->ajax()) return redirect('/');
+        $oficina = Oficina::findOrFail($request->id);
+        $oficina ->unidad_organica = $request->unidad_organica;
+        $oficina ->responsable = $request->responsable;
+        $oficina ->save();
+    }
+
+
+
 
 
 }

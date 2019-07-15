@@ -16,7 +16,6 @@ class CreateOficinasTable extends Migration
         Schema::create('oficinas', function (Blueprint $table) {
             $table->increments('id');
             $table->string('unidad_organica', 100);
-            $table->string('division', 70)->nullable();
             $table->string('responsable', 100);
             $table->timestamps();
         });

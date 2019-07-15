@@ -22,6 +22,7 @@ Vue.component('solicitante', require('./components/Solicitante.vue'));
 Vue.component('regexpediente', require('./components/Regexpediente.vue'));
 Vue.component('rol', require('./components/Rol.vue'));
 Vue.component('user', require('./components/User.vue'));
+Vue.component('consultaregistro', require('./components/ConsultaRegistro.vue'));
 
 const app = new Vue({
     el: '#app',

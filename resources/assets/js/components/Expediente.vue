@@ -98,7 +98,7 @@
             es verdadero
             -->
             <div class="modal fade"  tabindex="-1" :class="{'mostrar':modal }" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
-                <div class="modal-dialog modal-primary modal-lg" role="document">
+                <div class="modal-dialog modal-warning  modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h4 class="modal-title"  v-text="tituloModal" ></h4>
@@ -111,7 +111,7 @@
                         <div class="modal-body">
                             <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">codigo_expediente</label>
+                                    <label class="col-md-3  form-control-label h6 font-weight-bold text-light bg-warning  text-center " for="text-input">codigo_expediente</label>
                                     <div class="col-md-9">
                                         <input type="text" v-model="codigo_expediente" class="form-control" >
                                         
@@ -119,7 +119,7 @@
                                 </div>
 
                            <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Tipo Doc Expediente</label>
+                                    <label class="col-md-3 form-control-label h6 font-weight-bold text-light bg-warning  text-center" for="text-input">Tipo Doc Expediente</label>
                                     <div class="col-md-9">
                                         <select v-model="tipo_documento" class="form-control">
                                             <option value="SOLICITUD">SOLICITUD</option>
@@ -130,7 +130,7 @@
                           </div>
 
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">cabecera_documento</label>
+                                    <label class="col-md-3 form-control-label h6 font-weight-bold text-light bg-warning  text-center" for="text-input">cabecera_documento</label>
                                     <div class="col-md-9">
                                         <input type="text"   v-model="cabecera_documento"  class="form-control" placeholder="Nombre de cabecera">
                                         
@@ -138,7 +138,7 @@
                                 </div>
 
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">asunto_tramite</label>
+                                    <label class="col-md-3 form-control-label h6 font-weight-bold text-light bg-warning  text-center" for="text-input">asunto_tramite</label>
                                     <div class="col-md-9">
                                         <input type="text"   v-model=" asunto_tramite"  class="form-control" placeholder="Nombre de asunto">
                                         
@@ -146,7 +146,7 @@
                                 </div>
 
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">nro_folio</label>
+                                    <label class="col-md-3 form-control-label h6 font-weight-bold text-light bg-warning text-center" for="text-input">nro_folio</label>
                                     <div class="col-md-9">
                                         <input type="text"   v-model="nro_folio"  class="form-control" placeholder="Numero Folios">
                                         
@@ -155,7 +155,7 @@
 
                                 
                              <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Prioridad</label>
+                                    <label class="col-md-3 form-control-label h6 font-weight-bold text-light bg-warning text-center" for="text-input">Prioridad</label>
                                     <div class="col-md-9">
                                         <select v-model="prioridad" class="form-control">
                                             <option value="Urgente">Urgente</option>
@@ -165,7 +165,7 @@
                                 </div>
                                
                              <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Observaciones</label>
+                                    <label class="col-md-3 form-control-label h6 font-weight-bold text-light bg-warning text-center" for="text-input">Observaciones</label>
                                     <div class="col-md-9">
                                         <input type="text"   v-model="observaciones"  class="form-control" placeholder="Coloca las observaciones">
                                         
@@ -187,8 +187,8 @@
 
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @click="cerrarModal()" >Cerrar</button>
-                           <button type="button"  v-if ="tipoAccion==1" class="btn btn-primary" @click="registrarExpediente()">Guardar</button>
-                            <button type="button"  v-if ="tipoAccion==2" class="btn btn-primary" @click="actualizarExpediente()">Actualizar</button>
+                           <button type="button"  v-if ="tipoAccion==1" class="btn btn-warning " @click="registrarExpediente()">Guardar</button>
+                            <button type="button"  v-if ="tipoAccion==2" class="btn btn-warning " @click="actualizarExpediente()">Actualizar</button>
                         </div>
 
                     </div>

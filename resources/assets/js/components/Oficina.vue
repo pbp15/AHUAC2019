@@ -33,7 +33,6 @@
                                 <tr>
                                 
                                     <th>Unidad Orgánica</th>
-                                    <th>División</th>
                                     <th>Responsable</th>
                                      <th>Opciones</th>
                                 </tr>
@@ -44,12 +43,14 @@
                                   
                                 <!-- v-text para mostrar las columnas de los datos para que la tabla sea dinamica  -->
                                     <td v-text="oficina.unidad_organica"></td>
-                                    <td v-text="oficina.division"></td>
                                     <td v-text="oficina.responsable"></td>  
                                     <td>
                                         <button type="button" @click="abrirModal('oficina','actualizar',oficina)" class="btn btn-warning btn-sm" >
                                           <i class="icon-pencil"></i>
                                         </button> &nbsp;
+                                        <button type="button" @click="eliminarOficina(id)" class="btn btn-danger btn-sm" >
+                                          <i class="icon-trash"></i>
+                                        </button>
                                   
                                     </td>                                  
                                 </tr>                               
@@ -77,10 +78,12 @@
                  v-model="unidad_organica"  este v-model realiza una conexion entre el
                  input y la capa de datos(la propiedad data de nuestr codigo javascript)
                  en otras palabras aver conectado el fronent con la capa de datos
+                 MEJORAS DE TEXTO
+                 <label class="col-md-3 h5 form-control-label font-weight-bold text-light bg-success text-center " for="text-input">Unidad organica</label>
 
             -->
             <div class="modal fade"  tabindex="-1"  :class="{'mostrar':modal }" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
-                <div class="modal-dialog modal-primary modal-lg" role="document">
+                <div class="modal-dialog modal-success modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h4 class="modal-title" v-text="tituloModal"></h4> <!-- para que se vea el titulo de la accion  -->
@@ -91,35 +94,28 @@
                         <div class="modal-body">
                             <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Unidad organica</label>
+                                    <button type="button" class="btn btn-success btn-sm col-md-3" >                           
+                                      <i class="fa fa-desktop fa-3x fa-lg" style="color:#FFFFFF;"> </i>
+                                      </button>   
                                     <div class="col-md-9">
                                         <input type="text" v-model="unidad_organica" class="form-control" placeholder="Nombre de Unidad Organica">
                                       
                                     </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">División</label>
-                                    <div class="col-md-9">                                
-                                        <select v-model="division" class="form-control">
-                                            <option value="ARCHIVOS">ARCHIVOS</option>
-                                            <option value="SUBGERENCIA">SUBGERENCIA</option>
-                                          <option value="N.A">-</option>
-                                        </select>  
-                                      
-                                    </div>
-                                </div>
+                                </div>                         
 
 
                                   <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Responsable</label>
+                                    <button type="button" class="btn btn-success btn-sm col-md-3" >                           
+                                      <i class="fa fa-user fa-3x fa-lg" style="color:#FFFFFF;"> </i>
+                                      </button>   
                                     <div class="col-md-9">
                                         <input type="text" v-model="responsable" class="form-control" placeholder="Nombre del responsable">
                                       
                                     </div>
                                 </div>
 
-                                <div v-show="errorOficina" class="form-group row div-error">
-                                    <div class="text-center text-error">
+                                <div v-show="errorOficina" class="form-group row div-error  ">
+                                    <div class="text-center text-error ">
                                         <div v-for="error in errorMostrarMsjOficina" :key="error" v-text="error">
 
                                         </div>
@@ -134,8 +130,8 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button"  class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
-                            <button type="button"  v-if ="tipoAccion==1" class="btn btn-primary" @click="registrarOficina()">Guardar</button>
-                            <button type="button"  v-if ="tipoAccion==2" class="btn btn-primary" @click="actualizarOficina()">Actualizar</button>
+                            <button type="button"  v-if ="tipoAccion==1" class="btn btn-info" @click="registrarOficina()">Guardar</button>
+                            <button type="button"  v-if ="tipoAccion==2" class="btn btn-success" @click="actualizarOficina()">Actualizar</button>
                         </div>
                     </div>
                     <!-- /.modal-content -->
@@ -176,7 +172,6 @@
             return{
                 oficina_id: 0,
                 unidad_organica :'',
-                division : 'ARCHIVOS' ,
                 responsable: '',
                 arrayOficina : [], //almacene todos los datos
                 modal : 0, //esto es para ocultar o mostrar nuestra ventana modal
@@ -262,7 +257,6 @@
              let me=this;
                 axios.post('/oficina/registrar',{
                     'unidad_organica' : this.unidad_organica,
-                    'division' : this.division,
                     'responsable' : this.responsable
 
                 }).then(function (response) { //obtener los valores del /ofcina
@@ -283,7 +277,6 @@
              let me=this;
                 axios.put('/oficina/actualizar',{
                     'unidad_organica' : this.unidad_organica,
-                    'division' : this.division,
                     'responsable' : this.responsable,
                     'id': this.oficina_id
 
@@ -308,11 +301,51 @@
 
             return this.errorOficina;  
          },
+
+        eliminarOficina(id){
+               swal({
+                title: 'Esta seguro de eliminar esta Oficina?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Aceptar!',
+                cancelButtonText: 'Cancelar',
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger',
+                buttonsStyling: false,
+                reverseButtons: true
+                }).then((result) => {
+                if (result.value) {
+                    let me = this;
+
+                    axios.destroy('/oficina/eliminar',{
+                        'id': id
+                    }).then(function (response) {
+                        me.listarCategoria(1,'','nombre');
+                        swal(
+                        'Eliminado!',
+                        'El registro ha sido eliminado con éxito.',
+                        'success'
+                        )
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+                    
+                    
+                } else if (
+                    // Read more about handling dismissals
+                    result.dismiss === swal.DismissReason.cancel
+                ) {
+                    
+                }
+                }) 
+            },
+
          cerrarModal(){
              this.modal=0;
              this.tituloModal='';
              this.unidad_organica='';
-             this.division='';
              this.responsable='';
                 this.errorOficina=0;
 
@@ -327,7 +360,6 @@
                               this.modal = 1;
                               this.tituloModal = 'Registrar Oficina';
                               this.unidad_organica='';
-                              this.division = '';
                               this.responsable = '';
                               this.tipoAccion = 1;
                               break;
@@ -344,7 +376,6 @@
                             this.tipoAccion=2;
                             this.oficina_id=data['id'];
                               this.unidad_organica= data['unidad_organica'];
-                             this.division = data['division'];
                              this.responsable = data['responsable'];
                       
                             break;                  
@@ -390,7 +421,7 @@
     }
 
     .text-error{
-         color: red !important;
+         color:seagreen !important;
          font-weight: bold;
 
 

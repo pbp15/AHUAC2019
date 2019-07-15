@@ -21,7 +21,7 @@ class RegexpedienteController extends Controller
             ->join('personas','regexpedientes.idsolicitante','=','personas.id')
             ->join('oficinas','regexpedientes.idoficina','=','oficinas.id')
             ->select('regexpedientes.id','regexpedientes.fecha_tramite','regexpedientes.estado_tramite',
-            'expedientes.codigo_expediente','personas.nombre','oficinas.unidad_organica')
+            'expedientes.asunto_tramite','personas.nombre','oficinas.unidad_organica')
             ->orderBy('regexpedientes.id', 'desc')->paginate(3);
         }
         else{
@@ -29,7 +29,7 @@ class RegexpedienteController extends Controller
             ->join('personas','regexpedientes.idsolicitante','=','personas.id')
             ->join('oficinas','regexpedientes.idoficina','=','oficinas.id')
             ->select('regexpedientes.id','regexpedientes.fecha_tramite','regexpedientes.estado_tramite',
-            'expedientes.codigo_expediente','personas.nombre','oficinas.unidad_organica')
+            'expedientes.asunto_tramite','personas.nombre','oficinas.unidad_organica')
             ->orderBy('regexpedientes.id', 'desc')->paginate(3)          
             ->where('regexpedientes.'.$criterio, 'like', '%'. $buscar . '%')
             ->orderBy('regexpedientes.id', 'desc')->paginate(3);
@@ -87,7 +87,7 @@ class RegexpedienteController extends Controller
         ->select('regexpedientes.id','regexpedientes.fecha_tramite','regexpedientes.estado_tramite',
         'expedientes.codigo_expediente','expedientes.asunto_tramite','expedientes.prioridad',
         'expedientes.observaciones','personas.nombre','personas.tipo_documento',
-        'personas.num_documento','personas.direccion','solicitantes.edad','solicitantes.estado_civil','oficinas.unidad_organica','oficinas.division','oficinas.responsable')
+        'personas.num_documento','personas.direccion','solicitantes.edad','solicitantes.estado_civil','oficinas.unidad_organica','oficinas.responsable')
         ->where('regexpedientes.id','=',$id)
         ->orderBy('regexpedientes.id', 'desc')->take(1)->get();
 
@@ -100,6 +100,60 @@ class RegexpedienteController extends Controller
   
 
     }
+
+
+
+    public function obtenerVista(Request $request){
+
+        if (!$request->ajax()) return redirect('/');
+        $id = $request->id;
+        $regexpediente = Regexpediente::join('expedientes','regexpedientes.idexpediente','=','expedientes.id')
+        ->join('personas','regexpedientes.idsolicitante','=','personas.id')
+        ->join('solicitantes','regexpedientes.idsolicitante','=','solicitantes.id')
+        ->join('oficinas','regexpedientes.idoficina','=','oficinas.id')
+        ->select('regexpedientes.id','regexpedientes.fecha_tramite','regexpedientes.estado_tramite',
+        'expedientes.codigo_expediente','expedientes.asunto_tramite','expedientes.prioridad',
+        'expedientes.observaciones','personas.nombre','personas.tipo_documento',
+        'personas.num_documento','personas.direccion','solicitantes.edad','solicitantes.estado_civil','oficinas.unidad_organica','oficinas.responsable')
+        ->where('regexpedientes.id','=',$id)
+        ->orderBy('regexpedientes.id', 'desc')->take(1)->get();
+        return ['regexpediente' => $regexpediente];  
+
+    }
+
+    public function selectOficinaRecursos(Request $request){
+     //  if (!$request->ajax()) return redirect('/');
+
+
+         $regexpedientes = Regexpediente::join('expedientes','regexpedientes.idexpediente','=','expedientes.id')
+         ->join('personas','regexpedientes.idsolicitante','=','personas.id')
+         ->join('solicitantes','regexpedientes.idsolicitante','=','solicitantes.id')
+         ->join('oficinas','regexpedientes.idoficina','=','oficinas.id')
+         ->select('regexpedientes.id','regexpedientes.fecha_tramite','regexpedientes.estado_tramite',
+        'expedientes.codigo_expediente','expedientes.asunto_tramite','expedientes.prioridad',
+        'expedientes.observaciones','personas.nombre','personas.tipo_documento',
+        'personas.num_documento','personas.direccion','solicitantes.edad','solicitantes.estado_civil','oficinas.unidad_organica','oficinas.responsable')
+         ->where('oficinas.unidad_organica','ABASTECIMIENTO')
+         ->orderBy('unidad_organica', 'asc')->paginate(3);
+         
+         
+        return [
+            'pagination' => [
+                'total'        => $regexpedientes->total(),
+                'current_page' => $regexpedientes->currentPage(),
+                'per_page'     => $regexpedientes->perPage(),
+                'last_page'    => $regexpedientes->lastPage(),
+                'from'         => $regexpedientes->firstItem(),
+                'to'           => $regexpedientes->lastItem(),
+            ],
+            'regexpedientes' => $regexpedientes
+        ];
+ 
+     }
+
+
+
+
     public function desactivar(Request $request)
     {
         if (!$request->ajax()) return redirect('/');

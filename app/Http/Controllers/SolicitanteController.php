@@ -77,7 +77,7 @@ class SolicitanteController extends Controller
             $persona->save();
 
             $solicitante = new Solicitante();
-            $solicitante->procedencia = $request->procendencia;
+            $solicitante->procedencia = $request->procedencia;
             $solicitante->edad = $request->edad;
             $solicitante->estado_civil = $request->estado_civil;
             $solicitante->id = $persona->id;
@@ -101,7 +101,7 @@ class SolicitanteController extends Controller
             DB::beginTransaction();
 
             //Buscar primero el proveedor a modificar
-            $proveedor = Solicitante::findOrFail($request->id);
+            $solicitante = Solicitante::findOrFail($request->id);
 
             $persona = Persona::findOrFail($solicitante->id);
 

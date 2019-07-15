@@ -1,8 +1,6 @@
     @extends('principal')
     @section('contenido')
 
-
-
     @if(Auth::check())
           @if(Auth::user()->idrol == 1)               
           
@@ -28,9 +26,7 @@
 
                 <template v-if="menu==5">
                     <regexpediente></regexpediente>
-                </template>
-
-        
+                </template>      
 
                 <template v-if="menu==6">
                     <h1>Contenido del menú 6</h1>
@@ -52,10 +48,10 @@
                 </template>
 
                 <template v-if="menu==10">
-                    <h1>Reportes Registro de Expedientes</h1>
-                </template>
-
-                <template v-if="menu==11">
+                    <consultaregistro></consultaregistro> 
+                    </template>
+                    
+             <template v-if="menu==11">
                     <h1>Ayuda</h1>
                 </template>
 
@@ -101,7 +97,7 @@
                 </template>
 
                 <template v-if="menu==10">
-                    <h1>Reportes Registro de Expedientes</h1>
+                <consultaregistro></consultaregistro>  
                 </template>
 
                 <template v-if="menu==11">
@@ -112,7 +108,24 @@
                     <h1>Acerca de</h1>
                 </template>
 
-         @else
+
+                @elseif (Auth::user()->idrol == 3)
+
+
+                    <template v-if="menu==10">
+                    <consultaregistro></consultaregistro>  
+                    </template>
+
+                    <template v-if="menu==11">
+                        <h1>Ayuda</h1>
+                    </template>
+
+                    <template v-if="menu==12">
+                        <h1>Acerca de</h1>
+                    </template>
+                @else
+
+
            @endif
 
           @endif

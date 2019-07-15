@@ -168,7 +168,7 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{{$r->unidad_organica}} / {{$r->division}}</td>
+                            <td>{{$r->unidad_organica}} </td>
                             <td>{{$r->responsable}}</td>
                         </tr>
                     </tbody>
